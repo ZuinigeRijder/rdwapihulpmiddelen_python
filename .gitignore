@@ -1,5 +1,6 @@
-kentekens/
+__pycache__/
 x.*
+*.bewaar.txt
 !Build/
 .last_cover_stats
 /META.yml

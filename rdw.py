@@ -78,9 +78,6 @@ def get_print_line(line):
 def main():
     """main"""
 
-    false = 0
-    dump = false
-
     # this contains the pricelist per date and kWh battery and AWD
     pricelists_dates = ["20230101", "20220901", "20220501", "20220301", "20210501"]
     pricelists = fill_prices(D)
@@ -145,119 +142,64 @@ def main():
 
     summary = arg_has("summary")
     overview = arg_has("overview")
-    update = arg_has("update")
 
     filename = "x.kentekens"
     cmd = ""
 
-    if not summary and not overview:
-        print("Getting IONIQ5 kentekens")
-        if os.path.exists(filename):
-            os.remove(filename)
-
-        cmd = 'wget --quiet --output-document=x.kentekens "https://opendata.rdw.nl/api/id/m9d7-ebf2.json?$select=kenteken&$order=`:id`+ASC&$limit=5000&$offset=0&$where=(%60handelsbenaming%60%20%3D%20%27IONIQ5%27)&$$read_from_nbe=true&$$version=2.1"'  # noqa
-        execute_command(cmd, D, retry=False, die_on_error=True)
-        print("Processing IONIQ5 kentekens")
-
-    kentekens = []
-    kentekens_dict = {}
-    tenaamgesteld_dict = {}
-
-    with open(filename, "r", encoding="utf8") as file:
-        for line in file:
-            current_line = line.rstrip("\n")
-            current_line = re.sub('^.*"kenteken":"', "", current_line)
-            current_line = current_line.replace('"}', "")
-            current_line = current_line.replace("]", "")
-            kentekens.append(current_line)
-            _ = D and dbg(f"Adding kentekens dict: [{current_line}]")
-            kentekens_dict[current_line] = 1
-
-    opkenteken = len(kentekens)
-
-    kentekensexported = {}
-    if not update:
-        fileexport = "exported.txt"
-        with open(fileexport, "r", encoding="utf8") as file:
-            for line in file:
-                current_line = line.rstrip("\n")
-                if current_line not in kentekens_dict:
-                    _ = D and dbg(f"Adding exported: [{current_line}]")
-                    kentekens.append(current_line)
-                    kentekens_dict[current_line] = 1
-                kentekensexported[current_line] = 1
-
-    sorted_kentekens = sorted(kentekens)
-
     opkentekenzonderexport = 0
 
-    registered = ""
-
-    missingtxt = {}
-    with open("missing.txt", "r", encoding="utf8") as file:
-        for line in file:
+    nognietopnaam_dict = {}
+    with open("nognietopnaam.txt", "r", encoding="utf8") as nognietopnaamfile:
+        for line in nognietopnaamfile:
             mstr = line.rstrip("\n")
             k = mstr[:6].rstrip("\n")
             if k == "":
                 continue
-            _ = D and dbg(f"Adding missing: [{k}]")
-            missingtxt[k] = mstr
+            _ = D and dbg(f"Adding nognietopnaam: [{k}]")
+            nognietopnaam_dict[k] = mstr
 
-    missing = {}
-    with open("missing.outfile.txt", "r", encoding="utf8") as file:
-        for line in file:
+    opnaam_dict = {}
+    with open("opnaam.txt", "r", encoding="utf8") as opnaamfile:
+        for line in opnaamfile:
             mstr = line.rstrip("\n")
-            k = mstr[:6]
-            missing[k] = mstr
-
-            cstr = mstr[16:26].upper().rstrip("\n")
-            add = k[0] + k[4:6] + k + "          " + cstr
-            _ = D and dbg(f"Adding registered: [{add}]")
-            registered += add + "\n"
+            k = mstr[:6].rstrip("\n")
+            if k == "":
+                continue
+            _ = D and dbg(f"Adding opnaam: [{k}]")
+            opnaam_dict[k] = mstr
 
     types = {}
+    kentekensexported = {}
     special_kentekens = []
     gekend_op_naam_list = []
     nieuw_op_naam_list = []
+    nieuw_nog_niet_op_naam_list = []
     geimporteerd = 0
 
-    for k in sorted_kentekens:
-        filename = f"kentekens/x.{k}"
+    count_nog_niet_op_naam = 0
+    nognietopnaam = []
+    opnaam = []
+
+    print("Getting IONIQ5 kentekens")
+    if os.path.exists(filename):
+        os.remove(filename)
+    cmd = 'wget --quiet --output-document=x.kentekens "https://opendata.rdw.nl/api/id/m9d7-ebf2.json?$select=*&$order=`:id`+ASC&$limit=8000&$offset=0&$where=(%60handelsbenaming%60%20%3D%20%27IONIQ5%27)&$$read_from_nbe=true&$$version=2.1"'  # noqa
+    execute_command(cmd, D, retry=False, die_on_error=True)
+    print("Processing IONIQ5 kentekens")
+    with open(filename, encoding="utf8") as json_file:
+        json_data = json.load(json_file)
+
+    aantal_kentekens = len(json_data)
+    print(f"Aantal kentekens: {aantal_kentekens}")
+    for hash_ in json_data:
+        k = hash_["kenteken"]
+        _ = D and dbg(f"kenteken = [{k}]")
+
         gekend_op_naam = False
         nieuw_op_naam = False
 
-        if update:
-            cmd = f'wget --quiet --output-document={filename} "https://opendata.rdw.nl/api/id/m9d7-ebf2.json?$select=*&$order=`:id`+ASC&$limit=17&$offset=0&$where=(%60kenteken%60%20%3D%20%27{k}%27)&$$read_from_nbe=true&$$version=2.1"'  # noqa
-            execute_command(cmd, D, retry=False, die_on_error=True)
-        elif os.path.exists(filename):
-            _ = D and dbg(f"Already exists: Skipping: {filename}")
-
-            if k in missingtxt:
-                _ = D and dbg(f"Deleting from missing.txt: [{k}]")
-                del missingtxt[k]
-            if os.path.exists(f"kentekens/x.missing.{k}.html"):
-                print(f"Removing: kentekens/x.missing.{k}.html")
-                os.unlink(f"kentekens/x.missing.{k}.html")
-        else:
-            if k in missing:
-                gekend_op_naam = True
-                print(f"{k} (gekend kenteken op naam gezet)")
-            else:
-                nieuw_op_naam = True
-                print(f"{k} (nieuw kenteken op naam gezet)")
-            cmd = f'wget --quiet --output-document={filename} "https://opendata.rdw.nl/api/id/m9d7-ebf2.json?$select=*&$order=`:id`+ASC&$limit=17&$offset=0&$where=(%60kenteken%60%20%3D%20%27{k}%27)&$$read_from_nbe=true&$$version=2.1"'  # noqa
-            execute_command(cmd, D, retry=False, die_on_error=True)
-
-        _ = D and dbg(f"Processing: {filename}")
-
-        with open(filename, "r", encoding="utf8") as kentekenfile:
-            json_text = kentekenfile.read().strip()
-        tenaamgesteld_dict[k] = 1
-        from_json = json.loads(json_text)
-        if dump:
-            print("Dump of fromJSON:", from_json)
-        array = from_json
-        hash_ = array[0]
+        gekend_niet_op_naam = False
+        nieuw_niet_op_naam = False
 
         taxi = hash_["taxi_indicator"]
         if taxi == "Ja":
@@ -266,23 +208,23 @@ def main():
         export = hash_["export_indicator"]
         if export == "Ja":
             countexport += 1
-            if k not in kentekensexported:
-                kentekensexported[k] = 1
         else:
             opkentekenzonderexport += 1
 
         kenteken = safe_get_key(hash_, "kenteken")
         if len(kenteken) != 6:
             os.rename(filename, filename + ".fout")
-            my_die(f"Kenteken lengte fout: [{filename}],[{kenteken}]")
-        date = safe_get_key(hash_, "datum_eerste_afgifte_nederland")
+            my_die(f"Kenteken lengte fout: [{filename}],[{kenteken}] {hash_}")
+        date = safe_get_key(
+            hash_, "datum_eerste_afgifte_nederland"
+        )  # niet gevuld wanneer kenteken nog niet op naam
         if date == "":
             date = safe_get_key(
                 hash_, "datum_eerste_tenaamstelling_in_nederland"
-            )  # changed name 31 maart 2022
+            )  # changed 31 maart 2022, niet gevuld wanneer kenteken nog niet op naam
         date_bpm = safe_get_key(
             hash_, "registratie_datum_goedkeuring_afschrijvingsmoment_bpm_dt"
-        )
+        )  # gevuld wanneer kenteken nog niet op naam
         if date_bpm != "":
             if len(date_bpm) == 23 and date_bpm[:2] == "20":
                 date_bpm = date_bpm[:4] + date_bpm[5:7] + date_bpm[8:10]
@@ -294,15 +236,40 @@ def main():
                 print(f"WARNING: {k} dateBPM: [{date_bpm}]")
         if date == "" and date_bpm != "":
             date = date_bpm
-            print(f"date overruled with {date_bpm}: [{filename}],[{date}]")
+            if k not in nognietopnaam_dict:
+                nieuw_niet_op_naam = True
+                print(
+                    f"{k} Nieuw kenteken nog niet op naam {date_bpm}: [{filename}],[{date}]"  # noqa
+                )
+            else:
+                gekend_niet_op_naam = True
+                print(
+                    f"{k} Gekend kenteken nog niet op naam {date_bpm}: [{filename}],[{date}]"  # noqa
+                )
+            nognietopnaam_dict[k] = k
+        else:
+            if k not in nognietopnaam_dict and k not in opnaam_dict:
+                nieuw_op_naam = True
+                print(
+                    f"{k} Nieuw kenteken op naam {date_bpm}: [{filename}],[{date}]"  # noqa
+                )
+            else:
+                gekend_op_naam = True
+                if k in nognietopnaam_dict:
+                    del nognietopnaam_dict[k]
+                _ = D and dbg(
+                    f"{k} Gekend kenteken op naam {date_bpm}: [{filename}],[{date}]"  # noqa
+                )
         if len(date) != 8:
             my_die(f"Date lengte fout: [{filename}],[{date}]")
         date_toelating = safe_get_key(hash_, "datum_eerste_toelating")
         if date_toelating == "":
             date_toelating = date
-            print(f"datetoelating overruled with {date}: [{filename}],[{date}]")
+            print(
+                f"datetoelating overruled with {date}: [{filename}],[{date}]"
+            )  # niet gevuld wanneer kenteken nog niet op naam
         if len(date_toelating) != 8:
-            my_die(f"Date lengte fout: [{filename}],[{date_toelating}]")
+            my_die(f"Date lengte fout: [{filename}],[{date_toelating}] {hash_}")
         if date != date_toelating:
             _ = D and dbg(f"Import {kenteken}: [{date_toelating}] [{date}]")
             geimporteerd += 1
@@ -353,9 +320,13 @@ def main():
             variant = "F5E42"
             uitvoering = "E11A11"
             typegoedkeuring = "e9*2018/858*11054*01"
+        elif kenteken == "R494RB":
+            variant = "F5E42"
+            uitvoering = "E11A11"
+            typegoedkeuring = "e9*2018/858*11054*04"
 
         if variant == "":
-            my_die(f"Variant leeg: [{filename}],[{variant}]")
+            my_die(f"{k} Variant leeg: [{filename}],[{variant}] {hash_}")
         if variant not in [
             "F5E14",
             "F5E32",
@@ -365,21 +336,23 @@ def main():
             "F5E62",
             "F5E24",
         ]:
-            my_die(f"Variant verkeerd {kenteken}: [{filename}],[{variant}]")
+            my_die(f"Variant verkeerd {kenteken}: [{filename}],[{variant}] {hash_}")
 
         if uitvoering == "":
-            my_die(f"Uitvoering leeg: [{filename}],[{uitvoering}]")
+            my_die(f"Uitvoering leeg: [{filename}],[{uitvoering}] {hash_}")
         if uitvoering not in ["E11A11", "E11B11"]:
-            my_die(f"Uitvoering onbekend: [{filename}],[{uitvoering}]")
+            my_die(f"Uitvoering onbekend: [{filename}],[{uitvoering}] {hash_}")
 
         if typegoedkeuring == "":
-            my_die(f"Typegoedkeuring leeg: [{filename}],[{typegoedkeuring}]")
+            my_die(f"Typegoedkeuring leeg: [{filename}],[{typegoedkeuring}] {hash_}")
         if typegoedkeuring not in [
             "e9*2018/858*11054*01",
             "e9*2018/858*11054*03",
             "e9*2018/858*11054*04",
         ]:
-            my_die(f"Typegoedkeuring verkeerd: [{filename}],[{typegoedkeuring}]")
+            my_die(
+                f"Typegoedkeuring verkeerd: [{filename}],[{typegoedkeuring}] {hash_}"
+            )
 
         cartype = f"{variant};{uitvoering};{typegoedkeuring}; prijs: {prijs} {kleur}"
         date20 = date_toelating.replace(
@@ -395,7 +368,7 @@ def main():
         if date20[:3] != "202":
             print(f"Invalid toelating date: {date20}")
             date20 = date20[6:10] + date20[3:5] + date20[0:2]
-            print(f"Corrected toalating date: {date20}")
+            print(f"Corrected toelating date: {date20}")
         if D and kenteken == "R059VH":
             print(
                 f"{kenteken}, date: {date}, datetoelating: {date_toelating}, date20: {date20}, dateBPM: {date_bpm}"  # noqa
@@ -447,124 +420,53 @@ def main():
         special_kenteken = f"{kenteken[0]}{kenteken[4:6]}{kenteken} {date} {kleur} {prijs}    {cartype}"  # noqa
         _ = D and print(special_kenteken)
         tmp = get_print_line(special_kenteken)
+        if export == "Ja":
+            kentekensexported[k] = tmp
+        if gekend_niet_op_naam:
+            print(f"Gekend kenteken niet op naam: {k} {tmp}")
+            nognietopnaam.append(tmp)
+            count_nog_niet_op_naam += 1
+        if nieuw_niet_op_naam:
+            print(f"Nieuw kenteken niet op naam: {k} {tmp}")
+            nognietopnaam.append(tmp)
+            nieuw_nog_niet_op_naam_list.append(tmp)
+            count_nog_niet_op_naam += 1
+
         if gekend_op_naam:
-            print("Gekend kenteken op naam gezet:")
+            _ = D and dbg(f"Gekend kenteken op naam gezet: {k} {tmp}")
+            opnaam.append(tmp)
             # tmp = specialKenteken[2:18] + specialKenteken[38:]
             # tmp = re.sub(r';e9\*2018\/858\*11054\*0[134]; prijs: ', ' Euro', tmp)
             # print(tmp)
-            gekend_op_naam_list.append(f"{tmp}")
+            if k in nognietopnaam_dict:
+                gekend_op_naam_list.append(f"{tmp}")
         if nieuw_op_naam:
+            opnaam.append(tmp)
             # tmp = specialKenteken[2:18] + specialKenteken[38:]
             # tmp = re.sub(r';e9\*2018\/858\*11054\*0[134]; prijs: ', ' Euro', tmp)
             # print(tmp)
-            print(f"Nieuw kenteken op naam gezet: {tmp}")
+            print(f"Nieuw kenteken op naam gezet: {k} {tmp}")
             nieuw_op_naam_list.append(f"{tmp}")
         special_kentekens.append(special_kenteken)
 
-    if not update:
-        with open("exported.txt", "w", encoding="utf8") as exportedtxtfile:
-            for keytxt in sorted(kentekensexported.keys()):
-                exportedtxtfile.write(f"{keytxt}\n")
-
-    with open("missing.txt", "w", encoding="utf8") as missingtxtfile:
-        for keytxt in sorted(missingtxt.keys()):
-            missingtxtfile.write(f"{keytxt}\n")
-
-    with open("missing.txt", "r", encoding="utf8") as missingtxtfile:
-        for line in missingtxtfile:
-            mstr = line.strip()
-            k = mstr[:6].strip()
-            if k == "":
-                continue
-            missingtxt[k] = mstr
+    with open("exported.txt", "w", encoding="utf8") as exportedtxtfile:
+        for values in sorted(
+            kentekensexported.values(), key=lambda s: s[7:], reverse=True
+        ):
+            exportedtxtfile.write(f"{values}\n")
 
     importnietopnaam = 0
-    _ = D and dbg(f"REGISTERED: {registered}")
-    for item in registered.split("\n"):
-        line = item.rstrip("\n")
-        if line == "":
-            continue
-        _ = D and dbg(f"Checking registered: {line}")
-        check = line[3:9]
-        if check in tenaamgesteld_dict:
-            _ = D and dbg(f"Already exist: {check}")
-            continue
-        if check in missing:
-            mstr = missing[check]
-            _ = D and dbg(f"Missing: {mstr}")
-            comment = re.sub(r".*#", "", mstr)
-            if comment != "":
+    with open("nognietopnaam.txt", "w", encoding="utf8") as nognietopnaamtxtfile:
+        sorted_nog_niet_op_naam = sorted(nognietopnaam, key=lambda s: s[23:])
+        for string in sorted_nog_niet_op_naam:
+            if "geimporteerd" in string:
                 importnietopnaam += 1
-            mstr = re.sub(r"\s*#.*", "", mstr)  # remove comment
-            type_ = f"{mstr[36:]} {mstr[16:26]}"
-            _ = D and dbg(f"Type: [{type_}]")
-            if not (
-                re.match(r"^F5E14", type_)
-                or re.match(r"^F5E32", type_)
-                or re.match(r"^F5P41", type_)
-                or re.match(r"^F5E42", type_)
-                or re.match(r"^F5E54", type_)
-                or re.match(r"^F5E62", type_)
-            ):
-                if re.match(r"^F5E24", type_):
-                    print(f"Info: unknown type: [{mstr}][{type_}]")
-                else:
-                    print(f"Type wrong: [{mstr}][{type_}]")
-            date20 = mstr[7:15].replace(
-                "??", "20"
-            )  # nog niet op naam date can start with ??
-            if not re.match(r"^202", date20[:3]):
-                print(f"Invalid date: {date20}")
-                date20 = f"{date20[6:]}{date20[3:5]}{date20[:2]}"
-                print(f"Corrected date: {date20}")
-            tuple_parameter = (
-                taxi,
-                export,
-                count20inch,
-                countlounge20inch,
-                count19inch,
-                countlounge19inch,
-                colormatte,
-                colormica,
-                colorsolid,
-                colormicapearl,
-                colormetallic,
-                variantscount,
-                variantscountnognietopnaam,
-            )
-            (
-                value,
-                taxi,
-                export,
-                count20inch,
-                countlounge20inch,
-                count19inch,
-                countlounge19inch,
-                colormatte,
-                colormica,
-                colorsolid,
-                colormicapearl,
-                colormetallic,
-                variantscount,
-                variantscountnognietopnaam,
-            ) = get_variant(
-                pricelists,
-                pricelists_dates,
-                D,
-                tuple_parameter,
-                type_,
-                false,
-                check,
-                date20,
-            )
-            type_ += value
-            types[type_] = 1
-            tmp_special = f"{mstr[0]}{mstr[4:6]}{mstr} {mstr[16:26]}{value}{comment}"
-            _ = D and dbg(f"tmpSpecial = [{tmp_special}]")
-            special_kentekens.append(tmp_special)
-        else:
-            print(f"Adding special: [{line}]")
-            special_kentekens.append(line)
+            nognietopnaamtxtfile.write(f"{string}\n")
+
+    with open("opnaam.txt", "w", encoding="utf8") as opnaamtxtfile:
+        sorted_op_naam = sorted(opnaam, key=lambda s: s[7:], reverse=True)
+        for string in sorted_op_naam:
+            opnaamtxtfile.write(f"{string}\n")
 
     if not overview and not summary:
         print(
@@ -689,28 +591,19 @@ def main():
         print("[code]")
         op_naam = []
         for k in sorted(special_kentekens):
-            print_line = get_print_line(k)
-            date = k[10:16]
-            if date == key:
-                _ = D and dbg(print_line)
-                op_naam.append(print_line)
+            kenteken = k[3:9]
+            _ = D and dbg(f"kenteken={kenteken} k=[{k}]")
+            if kenteken not in nognietopnaam_dict:
+                print_line = get_print_line(k)
+                date = k[10:16]
+                if date == key:
+                    _ = D and dbg(print_line)
+                    op_naam.append(print_line)
         sorted_opnaam = sorted(op_naam, key=lambda a: a[23:])
         for string in sorted_opnaam:
             print(string)
         print("[/code]\n")
     print()
-
-    count_nog_niet_op_naam = 0
-    nognietopnaam = []
-
-    for k in sorted(special_kentekens):
-        print_line = get_print_line(k)
-        date = k[10:16]
-        if not date.startswith("2"):
-            count_nog_niet_op_naam += 1
-            _ = D and dbg(print_line)
-            print_line = print_line.replace(" ??", " 20")
-            nognietopnaam.append(print_line)
 
     if not overview and not summary:
         sorted_nog_niet_op_naam = sorted(nognietopnaam, key=lambda s: s[23:])
@@ -741,11 +634,21 @@ def main():
             print(string)
         print("[/code]\n")
 
+    if len(nieuw_nog_niet_op_naam_list) > 0:
+        print("Nieuw kenteken nog niet op naam:\n[code]")
+        sorted_nieuw_nog_niet_op_naam_list = sorted(
+            nieuw_nog_niet_op_naam_list,
+            key=lambda x: (x[23:], x[7:10], x[0], x[4:6], x[1:]),
+        )
+        for string in sorted_nieuw_nog_niet_op_naam_list:
+            print(string)
+        print("[/code]\n")
+
     print(f"Totaal aantal IONIQ5 op (ooit) gekend kenteken: {count}")
 
     if count_nog_niet_op_naam > 0:
         print(
-            f"Kenteken op naam RDW API: {opkenteken}, zonder geexporteerd: {opkentekenzonderexport}, {geimporteerd} geimporteerd en {countexport} geexporteerd"  # noqa
+            f"Kenteken op naam RDW API: {aantal_kentekens}, zonder geexporteerd: {opkentekenzonderexport}, {geimporteerd} geimporteerd en {countexport} geexporteerd"  # noqa
         )
         print(
             f"[url=https://gathering.tweakers.net/forum/list_message/69802884#69802884]Kenteken nog niet op naam: {count_nog_niet_op_naam}[/url], waarvan {importnietopnaam} geimporteerd\n"  # noqa
@@ -783,6 +686,7 @@ def main():
             "december 2022": "https://gathering.tweakers.net/forum/list_message/73984554#73984554",  # noqa
             "januari 2023": "https://gathering.tweakers.net/forum/list_message/74335278#74335278",  # noqa
             "februari 2023": "https://gathering.tweakers.net/forum/list_message/74650990#74650990",  # noqa
+            "maart 2023": "https://gathering.tweakers.net/forum/list_message/74966656#74966656",  # noqa
         }
 
         # jaren

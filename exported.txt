@@ -1,18 +1,38 @@
-L182ZD
-L201NL
-L229SG
-L858PB
-N334SH
-N497JJ
-N728KR
-N771FR
-P046JL
-P066TH
-P101VT
-P333ST
-P398VL
-P415TT
-P777LV
-P883JL
-R153FZ
-R964DN
+R041NR 20230328 E48600 Cyber/Galactic 58 kWh Connect met WP (prijslijst mei 2021) (geexporteerd) (model 2022) (20211119 geimporteerd 20230328)
+S954KF 20230223 E62245 Gravity Gold   77 kWh AWD Connect+ zonder FCA-JX/HDA2 (prijslijst jan 2023) (geexporteerd) (model 2023) (aanvraag kenteken 20230209)
+R060VH 20221208 E60500 Lucid Blue     77 kWh AWD Connect+ (prijslijst sept 2022) (geexporteerd) (model 2023) (aanvraag kenteken 20221128)
+R061VH 20221208 E60500 Lucid Blue     77 kWh AWD Connect+ (prijslijst sept 2022) (geexporteerd) (model 2023) (aanvraag kenteken 20221128)
+P898XG 20221108 E53504 Phantom Black  73 kWh AWD Connect zonder FCA-JX/HDA2 (prijslijst mei 2022 E1000 korting) $(E1645 goedkoper dan prijslijst) (geexporteerd) (model 2022) (20220602 geimporteerd 20221108)
+R945LL 20221014 E49400 Mystic Olive   77 kWh Style (prijslijst sept 2022) (geexporteerd) (model 2023) (aanvraag kenteken 20221003)
+R153FZ 20220824 E66101 Shooting Star  73 kWh AWD Lounge met Zonnepanelendak (prijslijst mei 2021) $(E5100 duurder dan prijslijst) (geexporteerd) (model 2022) (20211102 geimporteerd 20220824)
+R216FN 20220816 E59100 Shooting Star  73 kWh AWD Connect+ (prijslijst mei 2022 E1000 korting) (geexporteerd) (model 2022) (aanvraag kenteken 20220810)
+R215FN 20220816 E58900 Phantom Black  73 kWh AWD Connect+ (prijslijst mei 2022 E1000 korting) (geexporteerd) (model 2022) (aanvraag kenteken 20220810)
+P007LG 20220816 E53504 Cyber/Galactic 73 kWh AWD Connect (prijslijst mei 2021) $(E895 goedkoper dan prijslijst) (geexporteerd) (model 2022) (20220210 geimporteerd 20220816)
+R395BX 20220809 E54005 Mystic Olive   73 kWh Connect+ (prijslijst mei 2022 E1000 korting) (geexporteerd) (model 2022) (aanvraag kenteken 20220722)
+R964DN 20220801 E55600 GROEN          73 kWh Lounge (prijslijst mei 2021) (Digital Teal, Mystic Olive met Panoramadak) (geexporteerd) (model 2022) (20211126 geimporteerd 20220801)
+P101VT 20220725 E61995 Cyber/Galactic 73 kWh AWD Lounge met Panoramadak (prijslijst mei 2022 E1200 korting) (geexporteerd) (model 2022) (aanvraag kenteken 20220620)
+P415TT 20220721 E51704 Lucid Blue     58 kWh Lounge (prijslijst mei 2021) $(E895 goedkoper dan prijslijst) (19 inch banden) (geexporteerd) (model 2022) (20211223 geimporteerd 20220721)
+P333ST 20220714 E57400 Digital Teal   73 kWh AWD Connect+ (prijslijst maart 2022 E1000 korting) (geexporteerd) (model 2022) (aanvraag kenteken 20220530)
+P398VL 20220621 E57995 Digital Teal   73 kWh Lounge met Panoramadak (prijslijst mei 2022 E1200 korting) (geexporteerd) (model 2022) (aanvraag kenteken 20220616)
+P441KH 20220609 E57600 Gravity Gold   73 kWh AWD Connect+ (prijslijst maart 2022 E1000 korting) (geexporteerd) (model 2022) (aanvraag kenteken 20220330)
+P883JL 20220608 E54400 Phantom Black  73 kWh AWD Connect (prijslijst mei 2021) (20 inch banden) (geexporteerd) (model 2022) (20220216 geimporteerd 20220608)
+P066TH 20220602 E37831 Cyber/Galactic 73 kWh Style (prijslijst mei 2021) $(E8570 goedkoper dan prijslijst) (geexporteerd) (model 2022) (20210729 geimporteerd 20220602)
+P046JL 20220519 E53400 Atlas White    73 kWh Connect+ (prijslijst mei 2021) $(E200 duurder dan prijslijst) (geexporteerd) (model 2022) (20211130 geimporteerd 20220519)
+P081NR 20220429 E57400 Phantom Black  73 kWh AWD Connect+ (prijslijst maart 2022 E1000 korting) (geexporteerd) (model 2022) (aanvraag kenteken 20220426)
+P994KD 20220422 E55800 Shooting Star  73 kWh Lounge (prijslijst maart 2022 E1200 korting) (geexporteerd) (model 2022) (aanvraag kenteken 20220329)
+P327GR 20220309 E50705 Mystic Olive   73 kWh Connect met WP (prijslijst maart 2022 E1000 korting) (geexporteerd) (model 2022) (aanvraag kenteken 20220303)
+P481FV 20220303 E60495 Lucid Blue     73 kWh AWD Lounge met Panoramadak (prijslijst mei 2021) (geexporteerd) (model 2022) (aanvraag kenteken 20220223)
+N334SH 20220225 E50400 Cyber/Galactic 73 kWh Connect (prijslijst mei 2021) (20 inch banden) (geexporteerd) (model 2022) (20210601 geimporteerd 20220225)
+N497JJ 20211231 E55800 Gravity Gold   73 kWh Lounge (prijslijst mei 2021) (19 inch banden) (geexporteerd) (model 2022) (aanvraag kenteken 20211021)
+N751TS 20211229 E55800 Gravity Gold   73 kWh Lounge (prijslijst mei 2021) (19 inch banden) (geexporteerd) (model 2022) (aanvraag kenteken 20211223)
+N771FR 20211227 E55800 Gravity Gold   73 kWh Lounge (prijslijst mei 2021) (geexporteerd) (model 2022) (aanvraag kenteken 20210928)
+N008KL 20211216 E51600 Digital Teal   73 kWh Connect met WP (prijslijst mei 2021) (geexporteerd) (model 2022) (aanvraag kenteken 20211101)
+N292NZ 20211208 E53400 Lucid Blue     73 kWh Connect+ (prijslijst mei 2021) (geexporteerd) (model 2022) (aanvraag kenteken 20211124)
+N067NV 20211207 E56496 Phantom Black  73 kWh Lounge met Panoramadak (prijslijst mei 2021) (geexporteerd) (model 2022) (20211027 geimporteerd 20211207)
+N728KR 20211201 E48395 Cyber/Galactic 73 kWh Style met WP en V2L (prijslijst mei 2021) (geexporteerd) (model 2022) (aanvraag kenteken 20211102)
+L182ZD 20210827 E55600 Cyber/Galactic 73 kWh Lounge (prijslijst mei 2021) (geexporteerd) (model 2022)
+L838XT 20210821 E58000 Gravity Gold   PROJECT45 (geexporteerd) (model 2022)
+L611TL 20210804 E58000 Gravity Gold   PROJECT45 (geexporteerd) (model 2022)
+L229SG 20210723 E58000 Atlas White    PROJECT45 (geexporteerd) (model 2022)
+L858PB 20210630 E58000 Gravity Gold   PROJECT45 (geexporteerd) (model 2022)
+L201NL 20210625 E58000 Gravity Gold   PROJECT45 (geexporteerd) (model 2022)
