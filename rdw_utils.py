@@ -820,17 +820,24 @@ def get_variant(
                             f"Found DUBBEL GRIJS {kenteken}: {fulltype} -> [{found_variant}],[{found_variant2}]"  # noqa
                         )
                     found_variant2 = ""
+                    if debug:
+                        print(f"{kenteken} Genomen: {fulltype} -> {found_variant}")
         elif kleur == "WIT":
             if found_variant2 != "":
                 found_variant2 += " (Atlas White Matte)"
                 if found_variant != "":
-                    print(
-                        f"Found DUBBEL WHITE {kenteken}: {fulltype} -> [{found_variant}],[{found_variant2}]"  # noqa
-                    )
+                    if debug:
+                        print(
+                            f"Found DUBBEL WHITE {kenteken}: {fulltype} -> [{found_variant}],[{found_variant2}]"  # noqa
+                        )
                     if model2023:
                         found_variant = ""
+                        if debug:
+                            print(f"{kenteken} Genomen: {fulltype} -> {found_variant2}")
                     else:
                         found_variant2 = ""
+                        if debug:
+                            print(f"{kenteken} Genomen: {fulltype} -> {found_variant}")
         elif kleur == "GROEN":
             if found_variant != "":
                 found_variant += " (Olive)"
@@ -852,6 +859,8 @@ def get_variant(
                             f"Found UNEXPECTED DUBBEL GROEN {kenteken}: {fulltype} -> [{found_variant}],[{found_variant2}]"  # noqa
                         )
                     found_variant = ""  # assume digital teal
+                    if debug:
+                        print(f"{kenteken} Genomen: {fulltype} -> {found_variant2}")
 
         if found_variant == "":
             found_variant = found_variant2

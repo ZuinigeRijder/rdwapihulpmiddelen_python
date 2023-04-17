@@ -30,4 +30,11 @@ Er zijn 3 input/output bestanden:
 - nognietopnaam.txt
 - opnaam.txt
 
-Via RDW worden alle IONIQ5 kentekens opgehaald met de metadata. Wanneer deze niet in exported.txt, nognietopnaam.txt of opnaam.txt voorkomen, wordt deze aan het einde als nieuw kenteken getoond. Ook wordt er getoond wanneer een kenteken van nognietopnaam.txt naar opnaam.txt verhuisd.
+Via RDW worden alle IONIQ5 kentekens opgehaald met de metadata in x.kentekens. Wanneer deze niet in exported.txt, nognietopnaam.txt of opnaam.txt voorkomen, wordt deze aan het einde als nieuw kenteken getoond. Ook wordt er getoond wanneer een kenteken van nognietopnaam.txt naar opnaam.txt of naar exported.txt verhuisd is. Aan het eind wordt dan de volgende delta's gerapporteerd bij "python rdw.py" zonder parameters:
+- Eerder gevonden kenteken op naam gezet
+- Nieuw kenteken op naam gezet
+- Nieuw kenteken nog niet op naam
+- Nieuw kenteken geexporteerd
+
+Voorbeelden van uitvoer kun je op tweakers ["Het Hyundai Ioniq 5 leveringen topic"](https://gathering.tweakers.net/forum/list_messages/2073194/2?data%5Bfilter_pins%5D=1) terugvinden.
+
