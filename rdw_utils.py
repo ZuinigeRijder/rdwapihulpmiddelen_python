@@ -73,7 +73,7 @@ def execute_command(command, debug, retry, die_on_error):
 def arg_has(string: str) -> bool:
     """arguments has string"""
     for i in range(1, len(sys.argv)):
-        if sys.argv[i].lower() == string:
+        if string in sys.argv[i].lower():
             return True
     return False
 

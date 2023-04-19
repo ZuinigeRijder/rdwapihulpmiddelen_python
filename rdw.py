@@ -250,8 +250,6 @@ def main():
                 print(f"{k} Nieuw kenteken op naam {date_bpm}: [{date}]")  # noqa
             else:
                 gekend_op_naam = True
-                if k in nognietopnaam_dict:
-                    del nognietopnaam_dict[k]
                 _ = D and dbg(
                     f"{k} Gekend kenteken op naam {date_bpm}: [{date}]"  # noqa
                 )
@@ -430,6 +428,7 @@ def main():
         if gekend_op_naam:
             opnaam.append(tmp)
             if k in nognietopnaam_dict:
+                del nognietopnaam_dict[k]
                 gekend_op_naam_list.append(f"{tmp}")
                 print(f"Gekend kenteken op naam gezet: {k} {tmp}")
         if nieuw_op_naam:
