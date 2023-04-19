@@ -1,3 +1,11 @@
+<a name="R2.1.0"></a>
+# [fix dat van niet op naam naar op naam niet gerapporteerd werd (R2.1.0)](https://github.com/ZuinigeRijder/rdwapihulpmiddelen_python/releases/tag/R2.1.0) - 19 Apr 2023
+
+fix dat van niet op naam naar op naam niet gerapporteerd werd
+
+[Changes][R2.1.0]
+
+
 <a name="R2.0.0"></a>
 # [Herschreven doordat RDW nu ook kentekens nog niet op naam teruggeeft (R2.0.0)](https://github.com/ZuinigeRijder/rdwapihulpmiddelen_python/releases/tag/R2.0.0) - 17 Apr 2023
 
@@ -32,6 +40,7 @@ First python release based on https://github.com/ZuinigeRijder/rdwapihulpmiddele
 [Changes][R1.0.0]
 
 
+[R2.1.0]: https://github.com/ZuinigeRijder/rdwapihulpmiddelen_python/compare/R2.0.0...R2.1.0
 [R2.0.0]: https://github.com/ZuinigeRijder/rdwapihulpmiddelen_python/compare/R1.0.0...R2.0.0
 [R1.0.0]: https://github.com/ZuinigeRijder/rdwapihulpmiddelen_python/tree/R1.0.0
 
