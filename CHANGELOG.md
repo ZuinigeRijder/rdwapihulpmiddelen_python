@@ -1,3 +1,12 @@
+<a name="R2.2.0"></a>
+# [Maak backup van input/output files, maar verwijder wanneer hetzelfde (R2.2.0)](https://github.com/ZuinigeRijder/rdwapihulpmiddelen_python/releases/tag/R2.2.0) - 24 Apr 2023
+
+Maak backup van input/output files, maar verwijder weer wanneer hetzelfde.
+Hiermee kun je de historie van wijzigingen bewaren of later weer verwijderen.
+
+[Changes][R2.2.0]
+
+
 <a name="R2.1.0"></a>
 # [fix dat van niet op naam naar op naam niet gerapporteerd werd (R2.1.0)](https://github.com/ZuinigeRijder/rdwapihulpmiddelen_python/releases/tag/R2.1.0) - 19 Apr 2023
 
@@ -40,6 +49,7 @@ First python release based on https://github.com/ZuinigeRijder/rdwapihulpmiddele
 [Changes][R1.0.0]
 
 
+[R2.2.0]: https://github.com/ZuinigeRijder/rdwapihulpmiddelen_python/compare/R2.1.0...R2.2.0
 [R2.1.0]: https://github.com/ZuinigeRijder/rdwapihulpmiddelen_python/compare/R2.0.0...R2.1.0
 [R2.0.0]: https://github.com/ZuinigeRijder/rdwapihulpmiddelen_python/compare/R1.0.0...R2.0.0
 [R1.0.0]: https://github.com/ZuinigeRijder/rdwapihulpmiddelen_python/tree/R1.0.0
