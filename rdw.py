@@ -1,4 +1,6 @@
 """rdw.py"""
+import datetime
+import filecmp
 import json
 import os
 import re
@@ -22,6 +24,26 @@ def dbg(line: str) -> bool:
     if D:
         print(line)
     return D  # just to make a lazy evaluation expression possible
+
+
+def rename_with_timestamp(filename: str) -> str:
+    """rename with timestamp"""
+    new_filename = ""
+    if os.path.isfile(filename):
+        file_extension = os.path.splitext(filename)[1]
+        yyyymmdd_hhmmss = datetime.datetime.now().strftime("%Y.%m.%d_%H.%M.%S")
+        new_filename = f"{filename}.{yyyymmdd_hhmmss}{file_extension}"
+        os.rename(filename, new_filename)
+
+    print(f"INFO: Creating {filename}, backup={new_filename}")
+    return new_filename
+
+
+def delete_second_file_if_content_same(filename1: str, filename2: str) -> str:
+    """delete second file if content same"""
+    if filename2 != "" and filecmp.cmp(filename1, filename2, shallow=False):
+        print(f"INFO: Deleting {filename2}")
+        os.remove(filename2)
 
 
 # ===============================================================================
@@ -153,31 +175,34 @@ def main():
     opnaam = []
 
     nognietopnaam_dict = {}
-    with open("nognietopnaam.txt", "r", encoding="utf8") as nognietopnaamfile:
-        for line in nognietopnaamfile:
-            mstr = line.rstrip("\n")
-            k = mstr[:6]
-            if k != "":
-                _ = D and dbg(f"Adding nognietopnaam: [{k}]")
-                nognietopnaam_dict[k] = mstr
+    if os.path.isfile("nognietopnaam.txt"):
+        with open("nognietopnaam.txt", "r", encoding="utf8") as nognietopnaamfile:
+            for line in nognietopnaamfile:
+                mstr = line.rstrip("\n")
+                k = mstr[:6]
+                if k != "":
+                    _ = D and dbg(f"Adding nognietopnaam: [{k}]")
+                    nognietopnaam_dict[k] = mstr
 
     opnaam_dict = {}
-    with open("opnaam.txt", "r", encoding="utf8") as opnaamfile:
-        for line in opnaamfile:
-            mstr = line.rstrip("\n")
-            k = mstr[:6]
-            if k != "":
-                _ = D and dbg(f"Adding opnaam: [{k}]")
-                opnaam_dict[k] = mstr
+    if os.path.isfile("opnaam.txt"):
+        with open("opnaam.txt", "r", encoding="utf8") as opnaamfile:
+            for line in opnaamfile:
+                mstr = line.rstrip("\n")
+                k = mstr[:6]
+                if k != "":
+                    _ = D and dbg(f"Adding opnaam: [{k}]")
+                    opnaam_dict[k] = mstr
 
     exported_dict = {}
-    with open("exported.txt", "r", encoding="utf8") as exportedfile:
-        for line in exportedfile:
-            mstr = line.rstrip("\n")
-            k = mstr[:6]
-            if k != "":
-                _ = D and dbg(f"Adding exported: [{k}]")
-                exported_dict[k] = mstr
+    if os.path.isfile("exported.txt"):
+        with open("exported.txt", "r", encoding="utf8") as exportedfile:
+            for line in exportedfile:
+                mstr = line.rstrip("\n")
+                k = mstr[:6]
+                if k != "":
+                    _ = D and dbg(f"Adding exported: [{k}]")
+                    exported_dict[k] = mstr
 
     xkentekensfilename = "x.kentekens"
     if not summary and not overview:
@@ -438,26 +463,44 @@ def main():
         alle_kentekens.append(special_kenteken)
 
     countexport = 0
-    with open("exported.txt", "w", encoding="utf8") as exportedtxtfile:
-        for values in sorted(exported_dict.values(), key=lambda s: s[7:], reverse=True):
-            countexport += 1
-            exportedtxtfile.write(f"{values}\n")
+    sorted_exported = sorted(
+        exported_dict.values(),
+        key=lambda s: (s[7:], s[0:1], s[4:6], s[1:]),
+        reverse=True,
+    )
+    for values in sorted_exported:
+        countexport += 1
+    if not summary and not overview:
+        new_filename = rename_with_timestamp("exported.txt")
+        with open("exported.txt", "x", encoding="utf8") as exportedtxtfile:
+            for values in sorted_exported:
+                exportedtxtfile.write(f"{values}\n")
+        delete_second_file_if_content_same("exported.txt", new_filename)
 
     importnietopnaam = 0
-    with open("nognietopnaam.txt", "w", encoding="utf8") as nognietopnaamtxtfile:
-        sorted_nog_niet_op_naam = sorted(
-            nognietopnaam, key=lambda s: (s[23:], s[0:1], s[4:6], s[1:])
-        )
-        for string in sorted_nog_niet_op_naam:
-            if "geimporteerd" in string:
-                importnietopnaam += 1
-            string = string.replace(" (nog niet op naam)", "")
-            nognietopnaamtxtfile.write(f"{string}\n")
+    sorted_nog_niet_op_naam = sorted(
+        nognietopnaam, key=lambda s: (s[7:], s[0:1], s[4:6], s[1:]), reverse=True
+    )
+    for string in sorted_nog_niet_op_naam:
+        if "geimporteerd" in string:
+            importnietopnaam += 1
+    if not summary and not overview:
+        new_filename = rename_with_timestamp("nognietopnaam.txt")
+        with open("nognietopnaam.txt", "x", encoding="utf8") as nognietopnaamtxtfile:
+            for string in sorted_nog_niet_op_naam:
+                string = string.replace(" (nog niet op naam)", "")
+                nognietopnaamtxtfile.write(f"{string}\n")
+        delete_second_file_if_content_same("nognietopnaam.txt", new_filename)
 
-    with open("opnaam.txt", "w", encoding="utf8") as opnaamtxtfile:
-        sorted_op_naam = sorted(opnaam, key=lambda s: s[7:], reverse=True)
-        for string in sorted_op_naam:
-            opnaamtxtfile.write(f"{string}\n")
+    if not summary and not overview:
+        new_filename = rename_with_timestamp("opnaam.txt")
+        with open("opnaam.txt", "x", encoding="utf8") as opnaamtxtfile:
+            sorted_op_naam = sorted(
+                opnaam, key=lambda s: (s[7:], s[0:1], s[4:6], s[1:]), reverse=True
+            )
+            for string in sorted_op_naam:
+                opnaamtxtfile.write(f"{string}\n")
+        delete_second_file_if_content_same("opnaam.txt", new_filename)
 
     if not overview and not summary:
         print(

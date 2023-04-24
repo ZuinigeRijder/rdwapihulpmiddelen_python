@@ -1,7 +1,7 @@
 R041NR 20230328 E48600 Cyber/Galactic 58 kWh Connect met WP (prijslijst mei 2021) (geexporteerd) (model 2022) (20211119 geimporteerd 20230328)
 S954KF 20230223 E62245 Gravity Gold   77 kWh AWD Connect+ zonder FCA-JX/HDA2 (prijslijst jan 2023) (geexporteerd) (model 2023) (aanvraag kenteken 20230209)
-R060VH 20221208 E60500 Lucid Blue     77 kWh AWD Connect+ (prijslijst sept 2022) (geexporteerd) (model 2023) (aanvraag kenteken 20221128)
 R061VH 20221208 E60500 Lucid Blue     77 kWh AWD Connect+ (prijslijst sept 2022) (geexporteerd) (model 2023) (aanvraag kenteken 20221128)
+R060VH 20221208 E60500 Lucid Blue     77 kWh AWD Connect+ (prijslijst sept 2022) (geexporteerd) (model 2023) (aanvraag kenteken 20221128)
 P898XG 20221108 E53504 Phantom Black  73 kWh AWD Connect zonder FCA-JX/HDA2 (prijslijst mei 2022 E1000 korting) $(E1645 goedkoper dan prijslijst) (geexporteerd) (model 2022) (20220602 geimporteerd 20221108)
 R945LL 20221014 E49400 Mystic Olive   77 kWh Style (prijslijst sept 2022) (geexporteerd) (model 2023) (aanvraag kenteken 20221003)
 R153FZ 20220824 E66101 Shooting Star  73 kWh AWD Lounge met Zonnepanelendak (prijslijst mei 2021) $(E5100 duurder dan prijslijst) (geexporteerd) (model 2022) (20211102 geimporteerd 20220824)
