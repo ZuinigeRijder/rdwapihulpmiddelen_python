@@ -1215,4 +1215,27 @@ def fill_prices(d):  # pylint:disable=invalid-name
     pricelists["20230101_77"] = p_jan23_big_23
     pricelists["20230101_77AWD"] = p_jan23_awd_23
 
+    # model 2023 prijslijst mei 2023: 1000 euro duurder dan januari 2023
+    p_mei23_small_23 = {}
+    p_mei23_big_23 = {}
+    p_mei23_awd_23 = {}
+    par = "mei 2023"
+    fill_price(d, p_mei23_small_23, "Style", 48200, 58, False, True, par)
+    fill_price(d, p_mei23_small_23, "Connect", 52300, 58, False, True, par)
+    fill_price(d, p_mei23_small_23, "Connect+", 55300, 58, False, True, par)
+    fill_price(d, p_mei23_small_23, "Lounge", 57700, 58, False, True, par)
+
+    fill_price(d, p_mei23_big_23, "Style", 51800, 77, False, True, par)
+    fill_price(d, p_mei23_big_23, "Connect", 55900, 77, False, True, par)
+    fill_price(d, p_mei23_big_23, "Connect+", 58900, 77, False, True, par)
+    fill_price(d, p_mei23_big_23, "Lounge", 61300, 77, False, True, par)
+
+    fill_price(d, p_mei23_awd_23, "Connect", 59900, 77, True, True, par)
+    fill_price(d, p_mei23_awd_23, "Connect+", 62900, 77, True, True, par)
+    fill_price(d, p_mei23_awd_23, "Lounge", 65300, 77, True, True, par)
+
+    pricelists["20230501_58_2023"] = p_mei23_small_23
+    pricelists["20230501_77"] = p_mei23_big_23
+    pricelists["20230501_77AWD"] = p_mei23_awd_23
+
     return pricelists

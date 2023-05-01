@@ -101,7 +101,14 @@ def main():
     """main"""
 
     # this contains the pricelist per date and kWh battery and AWD
-    pricelists_dates = ["20230101", "20220901", "20220501", "20220301", "20210501"]
+    pricelists_dates = [
+        "20230501",
+        "20230101",
+        "20220901",
+        "20220501",
+        "20220301",
+        "20210501",
+    ]
     pricelists = fill_prices(D)
 
     variantscount = {}
