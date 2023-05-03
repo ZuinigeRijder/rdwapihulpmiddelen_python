@@ -1,5 +1,6 @@
 - [rdwapihulpmiddelen python versie](#rdwapihulpmiddelen-python-versie)
 - [rdw.py](#rdwpy)
+- [rdw\_utils.py](#rdw_utilspy)
 
 # rdwapihulpmiddelen python versie
 Python RDW API hulpmiddelen voor de IONIQ 5, misschien dat het ook gebruikt kan worden ter inspiratie voor andere auto's. Maar kan natuurlijk ook gebruikt worden om nieuwe kentekens te vinden die nog niet op naam staan.
@@ -10,12 +11,6 @@ Er is 1 python script:
 - rdw.py: haalt IONIQ 5 kentekens op
 
 De tools worden gedraaid op Windows 10 en geschikt voor Python 3.9, Python versie die ik gebruik: 3.9.13
-
-Het python script gebruikt wget om data op te halen, wget versie die ik gebruik:
-````
-wget --version
-GNU Wget 1.20.3 built on mingw32.
-````
 
 # rdw.py
 
@@ -30,6 +25,11 @@ Er zijn 3 input/output bestanden:
 - nognietopnaam.txt
 - opnaam.txt
 
+Ook wordt er een backup gemaakt van deze files met een datum/tijd in de naam, bijvoorbeeld:
+- nognietopnaam.txt.2023.04.21_09.42.25.txt
+
+Wanneer er niets gewijzigd is in de backup file, wordt de backup file weer verwijderd.
+
 Via RDW worden alle IONIQ5 kentekens opgehaald met de metadata in x.kentekens. Wanneer deze niet in exported.txt, nognietopnaam.txt of opnaam.txt voorkomen, wordt deze aan het einde als nieuw kenteken getoond. Ook wordt er getoond wanneer een kenteken van nognietopnaam.txt naar opnaam.txt of naar exported.txt verhuisd is. Aan het eind wordt dan de volgende delta's gerapporteerd bij "python rdw.py" zonder parameters:
 - Eerder gevonden kenteken op naam gezet
 - Nieuw kenteken op naam gezet
@@ -38,3 +38,7 @@ Via RDW worden alle IONIQ5 kentekens opgehaald met de metadata in x.kentekens. W
 
 Voorbeelden van uitvoer kun je op tweakers ["Het Hyundai Ioniq 5 leveringen topic"](https://gathering.tweakers.net/forum/list_messages/2073194/2?data%5Bfilter_pins%5D=1) terugvinden.
 
+
+# rdw_utils.py
+
+Hulp functies, gebruikt door rdw.py, onder andere om de juiste variant te vinden aan de hand van fiscale prijs, kleur en type.

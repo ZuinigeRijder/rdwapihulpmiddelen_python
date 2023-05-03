@@ -7,7 +7,7 @@ import re
 import sys
 from rdw_utils import (
     arg_has,
-    execute_command,
+    get_kentekens,
     fill_prices,
     get_variant,
     my_die,
@@ -39,7 +39,7 @@ def rename_with_timestamp(filename: str) -> str:
     return new_filename
 
 
-def delete_second_file_if_content_same(filename1: str, filename2: str) -> str:
+def delete_second_file_if_content_same(filename1: str, filename2: str):
     """delete second file if content same"""
     if filename2 != "" and filecmp.cmp(filename1, filename2, shallow=False):
         print(f"INFO: Deleting {filename2}")
@@ -216,8 +216,7 @@ def main():
         print("Getting IONIQ5 kentekens")
         if os.path.exists(xkentekensfilename):
             os.remove(xkentekensfilename)
-        cmd = 'wget --quiet --output-document=x.kentekens "https://opendata.rdw.nl/api/id/m9d7-ebf2.json?$select=*&$order=`:id`+ASC&$limit=8000&$offset=0&$where=(%60handelsbenaming%60%20%3D%20%27IONIQ5%27)&$$read_from_nbe=true&$$version=2.1"'  # noqa
-        execute_command(cmd, D, retry=False, die_on_error=True)
+            get_kentekens()
     print("Processing IONIQ5 kentekens")
     with open(xkentekensfilename, encoding="utf8") as json_file:
         json_data = json.load(json_file)

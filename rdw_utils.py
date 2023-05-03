@@ -1,9 +1,12 @@
-"""rdwfinder.py"""
+"""rdw_utils.py"""
 # pylint:disable=too-many-lines
 import re
-import subprocess
+import socket
 import sys
+import time
 import traceback
+from urllib.error import HTTPError, URLError
+from urllib.request import Request, urlopen
 
 
 # ===============================================================================
@@ -21,49 +24,34 @@ def my_die(txt):
     sys.exit(1)
 
 
-# ===============================================================================
-# execute_command
-# parameter 1: command
-# return errorlevel
-# ===============================================================================
-def execute_command(command, debug, retry, die_on_error):
-    """execute_command"""
-    # Note that the Python code uses the subprocess module to execute the
-    # command instead of the system function used in Perl.
-    # The subprocess.call function is used with the shell=True argument to
-    # execute the command in a shell.
-    # The output is redirected to stderr with 2>&1 as in the original
-    # Perl code.
-    # The function returns the error code, which is obtained by masking the
-    # returned value with 0xffff.
-    if retry:
-        try_count = 5
-    else:
-        try_count = 1
-    while try_count > 0:
-        if retry and try_count < 5:
-            print(f"Retry: {try_count}")
-        try_count -= 1
-        if debug:
-            print(f"Before: {command} 2>&1")
-        return_code = subprocess.call(f"{command} 2>&1", shell=True)
-        if return_code == 0:
-            # everything Ok
-            return 0
-        elif return_code == 0xFF00:
-            print(f"ERROR: Command [{command}] failed: {return_code}")
-        elif return_code > 0x80:
-            return_code >>= 8
-            print(
-                f"ERROR: Command [{command}] exited with non-zero exit status: {return_code}"  # noqa
-            )
-        else:
-            print(
-                f"ERROR: Command [{command}] exited with signal {return_code}"
-            )  # noqa
-    if die_on_error:
-        my_die(f"execute_command failed with {return_code}: [$command]")
-    return return_code & 0xFFFF
+# == get_kentekens ====================================================================
+def get_kentekens():
+    """get_kentekens and handle errors"""
+    while True:
+        url = "https://opendata.rdw.nl/api/id/m9d7-ebf2.json?$select=*&$order=`:id`+ASC&$limit=8000&$offset=0&$where=(%60handelsbenaming%60%20%3D%20%27IONIQ5%27)&$$read_from_nbe=true&$$version=2.1"  # noqa
+        request = Request(url)
+        errorstring = ""
+        try:
+            with urlopen(request, timeout=30) as response:
+                body = response.read()
+                content = body.decode("utf-8")
+                with open("x.kentekens", "x", encoding="utf8") as xkentekensfile:
+                    xkentekensfile.write(content)
+                return
+        except HTTPError as error:
+            errorstring = str(error.status) + ": " + error.reason
+        except URLError as error:
+            errorstring = str(error.reason)
+        except TimeoutError:
+            errorstring = "Request timed out"
+        except socket.timeout:
+            errorstring = "Socket timed out"
+        except Exception as ex:  # pylint: disable=broad-except
+            errorstring = "urlopen exception: " + str(ex)
+            traceback.print_exc()
+
+        print(f"ERROR (retry after 1 minute): {url} -> {errorstring}")
+        time.sleep(60)  # retry after 1 minute
 
 
 # ===============================================================================
