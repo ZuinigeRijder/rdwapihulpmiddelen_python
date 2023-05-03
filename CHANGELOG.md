@@ -1,3 +1,11 @@
+<a name="R2.4.0"></a>
+# [afhankelijkheid naar wget verwijderd (R2.4.0)](https://github.com/ZuinigeRijder/rdwapihulpmiddelen_python/releases/tag/R2.4.0) - 03 May 2023
+
+afhankelijkheid naar wget verwijderd
+
+[Changes][R2.4.0]
+
+
 <a name="R2.3.0"></a>
 # [prijslijst 1 mei 2023 toegevoegd (R2.3.0)](https://github.com/ZuinigeRijder/rdwapihulpmiddelen_python/releases/tag/R2.3.0) - 01 May 2023
 
@@ -57,6 +65,7 @@ First python release based on https://github.com/ZuinigeRijder/rdwapihulpmiddele
 [Changes][R1.0.0]
 
 
+[R2.4.0]: https://github.com/ZuinigeRijder/rdwapihulpmiddelen_python/compare/R2.3.0...R2.4.0
 [R2.3.0]: https://github.com/ZuinigeRijder/rdwapihulpmiddelen_python/compare/R2.2.0...R2.3.0
 [R2.2.0]: https://github.com/ZuinigeRijder/rdwapihulpmiddelen_python/compare/R2.1.0...R2.2.0
 [R2.1.0]: https://github.com/ZuinigeRijder/rdwapihulpmiddelen_python/compare/R2.0.0...R2.1.0
