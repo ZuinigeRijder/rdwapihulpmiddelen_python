@@ -1,4 +1,9 @@
 __pycache__/
+opnaam.txt.*
+nognietopnaam.txt.*
+exported.txt.*
+.vscode/
+*.7z
 x.*
 *.bewaar.txt
 *.bewaar

@@ -1,12 +1,19 @@
 """rdw_utils.py"""
 # pylint:disable=too-many-lines
+from datetime import datetime
 import re
 import socket
 import sys
 import time
 import traceback
+from urllib import request
 from urllib.error import HTTPError, URLError
-from urllib.request import Request, urlopen
+
+
+# == log ========================================================================
+def log(msg: str) -> None:
+    """log a message prefixed with a date/time format yyyymmdd hh:mm:ss"""
+    print(datetime.now().strftime("%Y%m%d %H:%M:%S") + ": " + msg)
 
 
 # ===============================================================================
@@ -18,8 +25,8 @@ def my_die(txt):
     # Note that Python doesn't have a direct equivalent to Perl's croak
     # function, so I've replaced it with sys.exit(1) which will terminate
     # the program with an exit code of 1 (indicating an error).
-    print("\n" + "?" * 80 + "\n")
-    print(f"Error: {txt}\n\n")
+    log("\n" + "?" * 80 + "\n")
+    log(f"Error: {txt}\n\n")
     traceback.print_stack()
     sys.exit(1)
 
@@ -29,15 +36,10 @@ def get_kentekens():
     """get_kentekens and handle errors"""
     while True:
         url = "https://opendata.rdw.nl/api/id/m9d7-ebf2.json?$select=*&$order=`:id`+ASC&$limit=8000&$offset=0&$where=(%60handelsbenaming%60%20%3D%20%27IONIQ5%27)&$$read_from_nbe=true&$$version=2.1"  # noqa
-        request = Request(url)
         errorstring = ""
         try:
-            with urlopen(request, timeout=30) as response:
-                body = response.read()
-                content = body.decode("utf-8")
-                with open("x.kentekens", "x", encoding="utf8") as xkentekensfile:
-                    xkentekensfile.write(content)
-                return
+            request.urlretrieve(url, "x.kentekens")
+            return
         except HTTPError as error:
             errorstring = str(error.status) + ": " + error.reason
         except URLError as error:
@@ -50,7 +52,7 @@ def get_kentekens():
             errorstring = "urlopen exception: " + str(ex)
             traceback.print_exc()
 
-        print(f"ERROR (retry after 1 minute): {url} -> {errorstring}")
+        log(f"RDW ERROR (retry after 1 minute): {errorstring} -> {url}")
         time.sleep(60)  # retry after 1 minute
 
 
@@ -332,14 +334,18 @@ def find_variant_exact(
     awd = variant == "F5E14" or variant == "F5E54"
     smallbattery = variant == "F5E42"
     result = ""
+    checked_one_pricelist = False
     for pricelist_date in pricelists_dates:
-        if date < pricelist_date:
+        if int(date) < int(pricelist_date) or (
+            checked_one_pricelist and pricelist_date[0:6] < date[0:6]
+        ):
             if debug:
-                print(f"Skipping pricelist {pricelist_date} for {date}")
+                print(f"{kenteken} Skipping pricelist [{pricelist_date}] for [{date}]")
             continue  # skip registration dates before prijslist date
 
+        checked_one_pricelist = True
         if debug:
-            print(f"Checking {kenteken} pricelist {pricelist_date} for {date}")
+            print(f"Checking {kenteken} pricelist [{pricelist_date}] for [{date}]")
 
         if smallbattery:
             if model2023:
@@ -358,6 +364,8 @@ def find_variant_exact(
                 result = get_prijs(pricelists, f"{pricelist_date}_73", prijs)
 
         if result != "":
+            if debug:
+                print(f"{kenteken} find_variant_exact found result {result}")
             break  # found result....
 
     if debug:
@@ -416,11 +424,18 @@ def find_variant_nearest(
     awd = variant in ("F5E14", "F5E54")
     smallbattery = variant == "F5E42"
     result = ""
+    checked_one_pricelist = False
     for pricelist_date in pricelists_dates:
-        if int(date) < int(pricelist_date):
+        if int(date) < int(pricelist_date) or (
+            checked_one_pricelist and pricelist_date[0:6] < date[0:6]
+        ):
             if debug:
-                print(f"Skipping nearest pricelist {pricelist_date} for {date}")
+                print(
+                    f"{kenteken} Skipping nearest pricelist {pricelist_date} for {date}"
+                )
             continue  # skip registration dates before pricelist date
+
+        checked_one_pricelist = True
         if debug:
             print(
                 f"Checking nearest pricelist {kenteken} pricelist {pricelist_date} for {date}"  # noqa
@@ -465,6 +480,8 @@ def find_variant_nearest(
                     prijs,
                 )
         if result != "":
+            if debug:
+                print(f"{kenteken} find_variant_nearest found result {result}")
             break
     if debug:
         small_str = ""
@@ -1109,6 +1126,93 @@ def fill_prices(d):  # pylint:disable=invalid-name
     pricelists["20220901_58"] = p_sep22_small
     pricelists["20220901_73"] = p_sep22_big
     pricelists["20220901_73AWD"] = p_sep22_awd
+
+    # model 2022.5 prijslijst januari 2023: 1400 euro duurder dan september 2022
+    p_jan23_small = {}
+    p_jan23_big = {}
+    p_jan23_awd = {}
+    par = "jan 2023"
+    fill_price(d, p_jan23_small, "Style", 47200, 58, False, True, par)
+    fill_price(d, p_jan23_small, "Connect", 51300, 58, False, True, par)
+    fill_price(d, p_jan23_small, "Connect+", 54300, 58, False, True, par)
+    fill_price(d, p_jan23_small, "Lounge", 56700, 58, False, True, par)
+
+    fill_price(d, p_jan23_big, "Style", 50800, 73, False, True, par)
+    fill_price(d, p_jan23_big, "Connect", 54900, 73, False, True, par)
+    fill_price(d, p_jan23_big, "Connect+", 57900, 73, False, True, par)
+    fill_price(d, p_jan23_big, "Lounge", 60300, 73, False, True, par)
+
+    fill_price(d, p_jan23_awd, "Connect", 58900, 73, True, True, par)
+    fill_price(d, p_jan23_awd, "Connect+", 61900, 73, True, True, par)
+    fill_price(d, p_jan23_awd, "Lounge", 64300, 73, True, True, par)
+
+    # also take into account korting
+    e300 = "jan 2023 E300 korting"
+    e400 = "jan 2023 E400 korting"
+    e600 = "jan 2023 E600 korting"
+    e900 = "jan 2023 E900 korting"
+    e1000 = "jan 2023 E1000 korting"
+    e1200 = "jan 2023 E1200 korting"
+    fill_price(d, p_jan23_small, "Style", 47200, 58, False, True, e300)
+    fill_price(d, p_jan23_small, "Connect", 51300, 58, False, True, e400)
+    fill_price(d, p_jan23_small, "Connect+", 54300, 58, False, True, e400)
+    fill_price(d, p_jan23_small, "Lounge", 56700, 58, False, True, e600)
+
+    fill_price(d, p_jan23_big, "Style", 50800, 73, False, True, e900)
+    fill_price(d, p_jan23_big, "Connect", 54900, 73, False, True, e1000)
+    fill_price(d, p_jan23_big, "Connect+", 57900, 73, False, True, e1000)
+    fill_price(d, p_jan23_big, "Lounge", 60300, 73, False, True, e1200)
+
+    fill_price(d, p_jan23_awd, "Connect", 58900, 73, True, True, e1000)
+    fill_price(d, p_jan23_awd, "Connect+", 61900, 73, True, True, e1200)
+    fill_price(d, p_jan23_awd, "Lounge", 64300, 73, True, True, e1200)
+
+    pricelists["20230101_58"] = p_jan23_small
+    pricelists["20230101_73"] = p_jan23_big
+    pricelists["20230101_73AWD"] = p_jan23_awd
+
+    # model 2022.5 prijslijst mei 2023: 1000 euro duurder dan januari 2023
+    p_mei23_small = {}
+    p_mei23_big = {}
+    p_mei23_awd = {}
+    par = "mei 2023"
+    fill_price(d, p_mei23_small, "Style", 48200, 58, False, True, par)
+    fill_price(d, p_mei23_small, "Connect", 52300, 58, False, True, par)
+    fill_price(d, p_mei23_small, "Connect+", 55300, 58, False, True, par)
+    fill_price(d, p_mei23_small, "Lounge", 57700, 58, False, True, par)
+
+    fill_price(d, p_mei23_big, "Style", 51800, 73, False, True, par)
+    fill_price(d, p_mei23_big, "Connect", 55900, 73, False, True, par)
+    fill_price(d, p_mei23_big, "Connect+", 58900, 73, False, True, par)
+    fill_price(d, p_mei23_big, "Lounge", 61300, 73, False, True, par)
+
+    fill_price(d, p_mei23_awd, "Connect", 59900, 73, True, True, par)
+    fill_price(d, p_mei23_awd, "Connect+", 62900, 73, True, True, par)
+    fill_price(d, p_mei23_awd, "Lounge", 65300, 73, True, True, par)
+
+    # also take into account korting
+    e300 = "mei 2023 E300 korting"
+    e400 = "mei 2023 E400 korting"
+    e600 = "mei 2023 E600 korting"
+    e900 = "mei 2023 E900 korting"
+    e1000 = "mei 2023 E1000 korting"
+    e1200 = "mei 2023 E1200 korting"
+    pricelists["20230501_58"] = p_mei23_small
+    pricelists["20230501_73"] = p_mei23_big
+    pricelists["20230501_73AWD"] = p_mei23_awd
+    fill_price(d, p_mei23_small, "Style", 48200, 58, False, True, e300)
+    fill_price(d, p_mei23_small, "Connect", 52300, 58, False, True, e400)
+    fill_price(d, p_mei23_small, "Connect+", 55300, 58, False, True, e400)
+    fill_price(d, p_mei23_small, "Lounge", 57700, 58, False, True, e600)
+
+    fill_price(d, p_mei23_big, "Style", 51800, 73, False, True, e900)
+    fill_price(d, p_mei23_big, "Connect", 55900, 73, False, True, e1000)
+    fill_price(d, p_mei23_big, "Connect+", 58900, 73, False, True, e1000)
+    fill_price(d, p_mei23_big, "Lounge", 61300, 73, False, True, e1200)
+
+    fill_price(d, p_mei23_awd, "Connect", 59900, 73, True, True, e1000)
+    fill_price(d, p_mei23_awd, "Connect+", 62900, 73, True, True, e1200)
+    fill_price(d, p_mei23_awd, "Lounge", 65300, 73, True, True, e1200)
 
     # ========== model2023 ============================================================
     # model 2023 prijslijst maart 2022
