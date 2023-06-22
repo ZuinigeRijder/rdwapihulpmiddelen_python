@@ -12,6 +12,7 @@ from rdw_utils import (
     get_variant,
     my_die,
     safe_get_key,
+    print_import_separate,
 )
 
 sys.stdout.flush()  # Disable output buffering
@@ -649,61 +650,64 @@ def main():
 
     if not overview and not summary:
         sorted_nog_niet_op_naam = sorted(nognietopnaam, key=lambda s: s[23:])
-        print(
-            "\n\n"
-            + "[h1]Kentekens nog niet op naam gesorteerd op kleur/uitvoering (datum is registratiedatum)[/h1]"  # noqa
+        print("\n\n")
+        print_import_separate(
+            sorted_nog_niet_op_naam,
+            "[anchor=nietgeimporteerd]\n[h1]Kentekens nog niet op naam (geen import) gesorteerd op kleur/uitvoering (datum is registratiedatum)[/h1]",  # noqa
+            "[anchor=geimporteerd][h1]Kentekens nog niet op naam (geimporteerd) gesorteerd op kleur/uitvoering (datum is registratiedatum)[/h1]",  # noqa
+            True,
         )
-        print("[code]")
-        for string in sorted_nog_niet_op_naam:
-            string = string.replace(" (nog niet op naam)", "")
-            print(string)
-        print("[/code]" + "\n")
 
     if len(gekend_op_naam_list) > 0:
-        print("Eerder gevonden kenteken op naam gezet:\n[code]")
         sorted_gekend_op_naam = sorted(
             gekend_op_naam_list, key=lambda x: (x[23:], x[7:10], x[0], x[4:6], x[1:])
         )
-        for string in sorted_gekend_op_naam:
-            print(string)
-        print("[/code]\n")
+        print_import_separate(
+            sorted_gekend_op_naam,
+            "Eerder gevonden kenteken (geen import) op naam gezet:",
+            "Eerder gevonden kenteken (geimporteerd) op naam gezet:",
+        )
 
     if len(nieuw_op_naam_list) > 0:
-        print("Nieuw kenteken op naam gezet:\n[code]")
         sorted_nieuw_op_naam = sorted(
             nieuw_op_naam_list, key=lambda x: (x[23:], x[7:10], x[0], x[4:6], x[1:])
         )
-        for string in sorted_nieuw_op_naam:
-            print(string)
-        print("[/code]\n")
+        print_import_separate(
+            sorted_nieuw_op_naam,
+            "Nieuw kenteken (geen import) op naam gezet:",
+            "Nieuw kenteken (geimporteerd) op naam gezet:",
+        )
 
     if len(nieuw_nog_niet_op_naam_list) > 0:
-        print("Nieuw kenteken nog niet op naam:\n[code]")
         sorted_nieuw_nog_niet_op_naam_list = sorted(
             nieuw_nog_niet_op_naam_list,
             key=lambda x: (x[23:], x[7:10], x[0], x[4:6], x[1:]),
         )
-        for string in sorted_nieuw_nog_niet_op_naam_list:
-            print(string)
-        print("[/code]\n")
+        print_import_separate(
+            sorted_nieuw_nog_niet_op_naam_list,
+            "Nieuw kenteken (geen import) nog niet op naam:",
+            "Nieuw kenteken (geimporteerd) nog niet op naam:",
+        )
 
     if len(nieuw_export_list) > 0:
-        print("Nieuw kenteken geexporteerd:\n[code]")
         sorted_nieuw_export_list = sorted(
             nieuw_export_list,
             key=lambda x: (x[23:], x[7:10], x[0], x[4:6], x[1:]),
         )
-        for string in sorted_nieuw_export_list:
-            print(string)
-        print("[/code]\n")
+        print_import_separate(
+            sorted_nieuw_export_list,
+            "Nieuw kenteken (geen import) geexporteerd:",
+            "Nieuw kenteken (geimporteerd) geexporteerd:",
+        )
 
     print(f"Totaal aantal IONIQ5 op gekend kenteken: {count}")
 
     if count_nog_niet_op_naam > 0:
         opnaamcount = len(opnaam)
         print(f"Op naam: {opnaamcount}")
+        nietimportnietopnaam = count_nog_niet_op_naam - importnietopnaam
         print(
-            f"[url=https://gathering.tweakers.net/forum/list_message/69802884#69802884]Nog niet op naam: {count_nog_niet_op_naam}[/url], waarvan {importnietopnaam} geimporteerd"  # noqa
+            f"[url=https://gathering.tweakers.net/forum/list_message/69802884#69802884]Nog niet op naam: {count_nog_niet_op_naam}[/url], [url=https://gathering.tweakers.net/forum/list_message/69802884#nietgeimporteerd]{nietimportnietopnaam} geen import[/url], [url=https://gathering.tweakers.net/forum/list_message/69802884#geimporteerd]{importnietopnaam} geimporteerd[/url]"  # noqa
         )
         print(f"Geimporteerd: {geimporteerd}")
         print(f"Geexporteerd: {countexport}")
@@ -742,6 +746,8 @@ def main():
             "januari 2023": "https://gathering.tweakers.net/forum/list_message/74335278#74335278",  # noqa
             "februari 2023": "https://gathering.tweakers.net/forum/list_message/74650990#74650990",  # noqa
             "maart 2023": "https://gathering.tweakers.net/forum/list_message/74966656#74966656",  # noqa
+            "april 2023": "https://gathering.tweakers.net/forum/list_message/75525182#75525182",  # noqa
+            "mei 2023": "https://gathering.tweakers.net/forum/list_message/75524932#75524932",  # noqa
         }
 
         # jaren

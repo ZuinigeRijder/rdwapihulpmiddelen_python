@@ -81,6 +81,38 @@ def round5(number):
         return number - remainder + 5
 
 
+def print_import_separate(
+    input_list: list,
+    header_not_import: str,
+    header_import: str,
+    replace_nog_niet_op_naam: bool = False,
+):
+    """print_import_separate"""
+    import_list = []
+    not_import_list = []
+    for string in input_list:
+        if replace_nog_niet_op_naam:
+            string = string.replace(" (nog niet op naam)", "")
+        if "geimporteerd" in string:
+            import_list.append(string)
+        else:
+            not_import_list.append(string)
+
+    if len(not_import_list) > 0:
+        print(header_not_import)
+        print("[code]")
+        for string in not_import_list:
+            print(string)
+        print("[/code]\n")
+
+    if len(import_list) > 0:
+        print(header_import)
+        print("[code]")
+        for string in import_list:
+            print(string)
+        print("[/code]\n")
+
+
 # ===============================================================================
 # fill_price
 # parameter 1: hash reference
