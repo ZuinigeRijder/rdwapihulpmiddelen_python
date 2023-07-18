@@ -1,9 +1,9 @@
-<a name="R2.7.0"></a>
-# [prijslijst probleem vanaf januari 2023 van niet model 2023 opgelost (R2.7.0)](https://github.com/ZuinigeRijder/rdwapihulpmiddelen_python/releases/tag/R2.7.0) - 18 Jul 2023
+<a name="R2.8.0"></a>
+# [prijslijst probleem vanaf januari 2023 van niet model 2023 opgelost (R2.8.0)](https://github.com/ZuinigeRijder/rdwapihulpmiddelen_python/releases/tag/R2.8.0) - 18 Jul 2023
 
 prijslijst probleem vanaf januari 2023 van niet model 2023 opgelost (geen korting meegenomen)
 
-[Changes][R2.7.0]
+[Changes][R2.8.0]
 
 
 <a name="R2.6.0"></a>
@@ -89,7 +89,7 @@ First python release based on https://github.com/ZuinigeRijder/rdwapihulpmiddele
 [Changes][R1.0.0]
 
 
-[R2.7.0]: https://github.com/ZuinigeRijder/rdwapihulpmiddelen_python/compare/R2.6.0...R2.7.0
+[R2.8.0]: https://github.com/ZuinigeRijder/rdwapihulpmiddelen_python/compare/R2.6.0...R2.8.0
 [R2.6.0]: https://github.com/ZuinigeRijder/rdwapihulpmiddelen_python/compare/R2.5.0...R2.6.0
 [R2.5.0]: https://github.com/ZuinigeRijder/rdwapihulpmiddelen_python/compare/R2.4.0...R2.5.0
 [R2.4.0]: https://github.com/ZuinigeRijder/rdwapihulpmiddelen_python/compare/R2.3.0...R2.4.0
