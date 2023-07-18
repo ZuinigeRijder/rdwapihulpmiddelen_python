@@ -748,6 +748,7 @@ def main():
             "maart 2023": "https://gathering.tweakers.net/forum/list_message/74966656#74966656",  # noqa
             "april 2023": "https://gathering.tweakers.net/forum/list_message/75525182#75525182",  # noqa
             "mei 2023": "https://gathering.tweakers.net/forum/list_message/75524932#75524932",  # noqa
+            "juni 2023": "https://gathering.tweakers.net/forum/list_message/75814390#75814390",  # noqa
         }
 
         # jaren

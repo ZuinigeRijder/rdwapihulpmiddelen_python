@@ -1102,14 +1102,14 @@ def fill_prices(d):  # pylint:disable=invalid-name
     fill_price(d, p_mei22_small, "Connect+", 51405 - 400, 58, False, False, e400)
     fill_price(d, p_mei22_small, "Lounge", 53805 - 600, 58, False, False, e600)
 
-    fill_price(d, p_mei22_big, "Style", 47005, 73, False, False, e900)
-    fill_price(d, p_mei22_big, "Connect", 51005, 73, False, False, e1000)
-    fill_price(d, p_mei22_big, "Connect+", 54005, 73, False, False, e1000)
-    fill_price(d, p_mei22_big, "Lounge", 56205, 73, False, False, e1200)
+    fill_price(d, p_mei22_big, "Style", 47905 - 900, 73, False, False, e900)
+    fill_price(d, p_mei22_big, "Connect", 52005 - 1000, 73, False, False, e1000)
+    fill_price(d, p_mei22_big, "Connect+", 55005 - 1000, 73, False, False, e1000)
+    fill_price(d, p_mei22_big, "Lounge", 57405 - 1200, 73, False, False, e1200)
 
-    fill_price(d, p_mei22_awd, "Connect", 55005, 73, True, False, e1000)
-    fill_price(d, p_mei22_awd, "Connect+", 58005, 73, True, False, e1000)
-    fill_price(d, p_mei22_awd, "Lounge", 60205, 73, True, False, e1200)
+    fill_price(d, p_mei22_awd, "Connect", 56005 - 1000, 73, True, False, e1000)
+    fill_price(d, p_mei22_awd, "Connect+", 59005 - 1000, 73, True, False, e1000)
+    fill_price(d, p_mei22_awd, "Lounge", 61405 - 1200, 73, True, False, e1200)
 
     pricelists["20220501_58"] = p_mei22_small
     pricelists["20220501_73"] = p_mei22_big
@@ -1146,14 +1146,14 @@ def fill_prices(d):  # pylint:disable=invalid-name
     fill_price(d, p_sep22_small, "Connect+", 52900 - 400, 58, False, False, e400)
     fill_price(d, p_sep22_small, "Lounge", 55300 - 600, 58, False, False, e600)
 
-    fill_price(d, p_sep22_big, "Style", 48500, 73, False, False, e900)
-    fill_price(d, p_sep22_big, "Connect", 52500, 73, False, False, e1000)
-    fill_price(d, p_sep22_big, "Connect+", 55500, 73, False, False, e1000)
-    fill_price(d, p_sep22_big, "Lounge", 57700, 73, False, False, e1200)
+    fill_price(d, p_sep22_big, "Style", 49400 - 900, 73, False, False, e900)
+    fill_price(d, p_sep22_big, "Connect", 53500 - 1000, 73, False, False, e1000)
+    fill_price(d, p_sep22_big, "Connect+", 56500 - 1000, 73, False, False, e1000)
+    fill_price(d, p_sep22_big, "Lounge", 58900 - 1200, 73, False, False, e1200)
 
-    fill_price(d, p_sep22_awd, "Connect", 56500, 73, True, False, e1000)
-    fill_price(d, p_sep22_awd, "Connect+", 59500, 73, True, False, e1000)
-    fill_price(d, p_sep22_awd, "Lounge", 61700, 73, True, False, e1200)
+    fill_price(d, p_sep22_awd, "Connect", 57500 - 1000, 73, True, False, e1000)
+    fill_price(d, p_sep22_awd, "Connect+", 60500 - 1000, 73, True, False, e1000)
+    fill_price(d, p_sep22_awd, "Lounge", 62900 - 1200, 73, True, False, e1200)
 
     pricelists["20220901_58"] = p_sep22_small
     pricelists["20220901_73"] = p_sep22_big
@@ -1164,19 +1164,19 @@ def fill_prices(d):  # pylint:disable=invalid-name
     p_jan23_big = {}
     p_jan23_awd = {}
     par = "jan 2023"
-    fill_price(d, p_jan23_small, "Style", 47200, 58, False, True, par)
-    fill_price(d, p_jan23_small, "Connect", 51300, 58, False, True, par)
-    fill_price(d, p_jan23_small, "Connect+", 54300, 58, False, True, par)
-    fill_price(d, p_jan23_small, "Lounge", 56700, 58, False, True, par)
+    fill_price(d, p_jan23_small, "Style", 47200, 58, False, False, par)
+    fill_price(d, p_jan23_small, "Connect", 51300, 58, False, False, par)
+    fill_price(d, p_jan23_small, "Connect+", 54300, 58, False, False, par)
+    fill_price(d, p_jan23_small, "Lounge", 56700, 58, False, False, par)
 
-    fill_price(d, p_jan23_big, "Style", 50800, 73, False, True, par)
-    fill_price(d, p_jan23_big, "Connect", 54900, 73, False, True, par)
-    fill_price(d, p_jan23_big, "Connect+", 57900, 73, False, True, par)
-    fill_price(d, p_jan23_big, "Lounge", 60300, 73, False, True, par)
+    fill_price(d, p_jan23_big, "Style", 50800, 73, False, False, par)
+    fill_price(d, p_jan23_big, "Connect", 54900, 73, False, False, par)
+    fill_price(d, p_jan23_big, "Connect+", 57900, 73, False, False, par)
+    fill_price(d, p_jan23_big, "Lounge", 60300, 73, False, False, par)
 
-    fill_price(d, p_jan23_awd, "Connect", 58900, 73, True, True, par)
-    fill_price(d, p_jan23_awd, "Connect+", 61900, 73, True, True, par)
-    fill_price(d, p_jan23_awd, "Lounge", 64300, 73, True, True, par)
+    fill_price(d, p_jan23_awd, "Connect", 58900, 73, True, False, par)
+    fill_price(d, p_jan23_awd, "Connect+", 61900, 73, True, False, par)
+    fill_price(d, p_jan23_awd, "Lounge", 64300, 73, True, False, par)
 
     # also take into account korting
     e300 = "jan 2023 E300 korting"
@@ -1185,19 +1185,19 @@ def fill_prices(d):  # pylint:disable=invalid-name
     e900 = "jan 2023 E900 korting"
     e1000 = "jan 2023 E1000 korting"
     e1200 = "jan 2023 E1200 korting"
-    fill_price(d, p_jan23_small, "Style", 47200, 58, False, True, e300)
-    fill_price(d, p_jan23_small, "Connect", 51300, 58, False, True, e400)
-    fill_price(d, p_jan23_small, "Connect+", 54300, 58, False, True, e400)
-    fill_price(d, p_jan23_small, "Lounge", 56700, 58, False, True, e600)
+    fill_price(d, p_jan23_small, "Style", 47200 - 300, 58, False, False, e300)
+    fill_price(d, p_jan23_small, "Connect", 51300 - 400, 58, False, False, e400)
+    fill_price(d, p_jan23_small, "Connect+", 54300 - 400, 58, False, False, e400)
+    fill_price(d, p_jan23_small, "Lounge", 56700 - 600, 58, False, False, e600)
 
-    fill_price(d, p_jan23_big, "Style", 50800, 73, False, True, e900)
-    fill_price(d, p_jan23_big, "Connect", 54900, 73, False, True, e1000)
-    fill_price(d, p_jan23_big, "Connect+", 57900, 73, False, True, e1000)
-    fill_price(d, p_jan23_big, "Lounge", 60300, 73, False, True, e1200)
+    fill_price(d, p_jan23_big, "Style", 50800 - 900, 73, False, False, e900)
+    fill_price(d, p_jan23_big, "Connect", 54900 - 1000, 73, False, False, e1000)
+    fill_price(d, p_jan23_big, "Connect+", 57900 - 1000, 73, False, False, e1000)
+    fill_price(d, p_jan23_big, "Lounge", 60300 - 1200, 73, False, False, e1200)
 
-    fill_price(d, p_jan23_awd, "Connect", 58900, 73, True, True, e1000)
-    fill_price(d, p_jan23_awd, "Connect+", 61900, 73, True, True, e1200)
-    fill_price(d, p_jan23_awd, "Lounge", 64300, 73, True, True, e1200)
+    fill_price(d, p_jan23_awd, "Connect", 58900 - 1000, 73, True, False, e1000)
+    fill_price(d, p_jan23_awd, "Connect+", 61900 - 1200, 73, True, False, e1200)
+    fill_price(d, p_jan23_awd, "Lounge", 64300 - 1200, 73, True, False, e1200)
 
     pricelists["20230101_58"] = p_jan23_small
     pricelists["20230101_73"] = p_jan23_big
@@ -1208,19 +1208,19 @@ def fill_prices(d):  # pylint:disable=invalid-name
     p_mei23_big = {}
     p_mei23_awd = {}
     par = "mei 2023"
-    fill_price(d, p_mei23_small, "Style", 48200, 58, False, True, par)
-    fill_price(d, p_mei23_small, "Connect", 52300, 58, False, True, par)
-    fill_price(d, p_mei23_small, "Connect+", 55300, 58, False, True, par)
-    fill_price(d, p_mei23_small, "Lounge", 57700, 58, False, True, par)
+    fill_price(d, p_mei23_small, "Style", 48200, 58, False, False, par)
+    fill_price(d, p_mei23_small, "Connect", 52300, 58, False, False, par)
+    fill_price(d, p_mei23_small, "Connect+", 55300, 58, False, False, par)
+    fill_price(d, p_mei23_small, "Lounge", 57700, 58, False, False, par)
 
-    fill_price(d, p_mei23_big, "Style", 51800, 73, False, True, par)
-    fill_price(d, p_mei23_big, "Connect", 55900, 73, False, True, par)
-    fill_price(d, p_mei23_big, "Connect+", 58900, 73, False, True, par)
-    fill_price(d, p_mei23_big, "Lounge", 61300, 73, False, True, par)
+    fill_price(d, p_mei23_big, "Style", 51800, 73, False, False, par)
+    fill_price(d, p_mei23_big, "Connect", 55900, 73, False, False, par)
+    fill_price(d, p_mei23_big, "Connect+", 58900, 73, False, False, par)
+    fill_price(d, p_mei23_big, "Lounge", 61300, 73, False, False, par)
 
-    fill_price(d, p_mei23_awd, "Connect", 59900, 73, True, True, par)
-    fill_price(d, p_mei23_awd, "Connect+", 62900, 73, True, True, par)
-    fill_price(d, p_mei23_awd, "Lounge", 65300, 73, True, True, par)
+    fill_price(d, p_mei23_awd, "Connect", 59900, 73, True, False, par)
+    fill_price(d, p_mei23_awd, "Connect+", 62900, 73, True, False, par)
+    fill_price(d, p_mei23_awd, "Lounge", 65300, 73, True, False, par)
 
     # also take into account korting
     e300 = "mei 2023 E300 korting"
@@ -1229,22 +1229,23 @@ def fill_prices(d):  # pylint:disable=invalid-name
     e900 = "mei 2023 E900 korting"
     e1000 = "mei 2023 E1000 korting"
     e1200 = "mei 2023 E1200 korting"
+    fill_price(d, p_mei23_small, "Style", 48200 - 300, 58, False, False, e300)
+    fill_price(d, p_mei23_small, "Connect", 52300 - 400, 58, False, False, e400)
+    fill_price(d, p_mei23_small, "Connect+", 55300 - 400, 58, False, False, e400)
+    fill_price(d, p_mei23_small, "Lounge", 57700 - 600, 58, False, False, e600)
+
+    fill_price(d, p_mei23_big, "Style", 51800 - 900, 73, False, False, e900)
+    fill_price(d, p_mei23_big, "Connect", 55900 - 1000, 73, False, False, e1000)
+    fill_price(d, p_mei23_big, "Connect+", 58900 - 1000, 73, False, False, e1000)
+    fill_price(d, p_mei23_big, "Lounge", 61300 - 1200, 73, False, False, e1200)
+
+    fill_price(d, p_mei23_awd, "Connect", 59900 - 1000, 73, True, False, e1000)
+    fill_price(d, p_mei23_awd, "Connect+", 62900 - 1200, 73, True, False, e1200)
+    fill_price(d, p_mei23_awd, "Lounge", 65300 - 1200, 73, True, False, e1200)
+
     pricelists["20230501_58"] = p_mei23_small
     pricelists["20230501_73"] = p_mei23_big
     pricelists["20230501_73AWD"] = p_mei23_awd
-    fill_price(d, p_mei23_small, "Style", 48200, 58, False, True, e300)
-    fill_price(d, p_mei23_small, "Connect", 52300, 58, False, True, e400)
-    fill_price(d, p_mei23_small, "Connect+", 55300, 58, False, True, e400)
-    fill_price(d, p_mei23_small, "Lounge", 57700, 58, False, True, e600)
-
-    fill_price(d, p_mei23_big, "Style", 51800, 73, False, True, e900)
-    fill_price(d, p_mei23_big, "Connect", 55900, 73, False, True, e1000)
-    fill_price(d, p_mei23_big, "Connect+", 58900, 73, False, True, e1000)
-    fill_price(d, p_mei23_big, "Lounge", 61300, 73, False, True, e1200)
-
-    fill_price(d, p_mei23_awd, "Connect", 59900, 73, True, True, e1000)
-    fill_price(d, p_mei23_awd, "Connect+", 62900, 73, True, True, e1200)
-    fill_price(d, p_mei23_awd, "Lounge", 65300, 73, True, True, e1200)
 
     # ========== model2023 ============================================================
     # model 2023 prijslijst maart 2022
