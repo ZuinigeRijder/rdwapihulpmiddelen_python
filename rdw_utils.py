@@ -668,7 +668,7 @@ def get_variant(
         print(f"#opNaam  : {op_naam:d}")
         print(f"#date    : {date}")
 
-    if int(date) < 20210401 or int(date) > 20240101:
+    if int(date) < 20210401 or int(date) > 20250101:
         my_die(f"Unexpected date: {date} for {kenteken} {fulltype}\n")
 
     kleur = "GRIJS"
@@ -726,13 +726,14 @@ def get_variant(
     if kleur not in ["WIT", "GRIJS", "GROEN", "ZWART", "BLAUW", "GEEL", "BRUIN"]:
         my_die(f"ERROR: kleur {kleur} fout voor {kenteken}: {fulltype}")
 
-    if (prijs < 4200 or prijs > 71000) and prijs not in [
+    if (prijs < 4200 or prijs > 75000) and prijs not in [
         42000,
         72300,
         33589,
         37831,
         5242655,
         78650,
+        76580,
     ]:
         my_die(f"ERROR: prijs {prijs} fout voor {kenteken}: {fulltype}")
     if debug:

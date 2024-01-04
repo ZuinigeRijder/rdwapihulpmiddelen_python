@@ -509,7 +509,7 @@ def main():
                 opnaamtxtfile.write(f"{string}\n")
         delete_second_file_if_content_same("opnaam.txt", new_filename)
 
-    if not overview and not summary:
+    if summary:
         print(
             "\n\n"
             + "[h1]Kentekens gesorteerd met tenaamstelling datum, prijs, kleur, uitvoering[/h1]"  # noqa
@@ -524,7 +524,7 @@ def main():
 
     for k in sorted(alle_kentekens, reverse=True):
         print_line = get_print_line(k)
-        if not overview and not summary:
+        if summary:
             print(f"{print_line}")
         if not re.search(r"AWD", print_line, re.IGNORECASE) and not re.search(
             r"PROJECT45", print_line, re.IGNORECASE
@@ -546,11 +546,11 @@ def main():
             r"Olive", print_line
         ):
             panoramadak += 1
-        if re.search(r"Zonnepanelen", print_line, re.IGNORECASE):
-            solardak += 1
         if re.search(r"PROJECT45", print_line, re.IGNORECASE):
             solardak += 1
             project45 += 1
+        elif re.search(r"Zonnepanelen", print_line, re.IGNORECASE):
+            solardak += 1
         elif re.search(r"LOUNGE", print_line, re.IGNORECASE):
             lounge += 1
         elif re.search(r"CONNECT\+", print_line, re.IGNORECASE):
@@ -577,7 +577,7 @@ def main():
         else:
             colors[color] = 1
 
-    if not overview and not summary:
+    if summary:
         print("[/code]\n")
 
     if overview:
@@ -749,6 +749,12 @@ def main():
             "april 2023": "https://gathering.tweakers.net/forum/list_message/75525182#75525182",  # noqa
             "mei 2023": "https://gathering.tweakers.net/forum/list_message/75524932#75524932",  # noqa
             "juni 2023": "https://gathering.tweakers.net/forum/list_message/75814390#75814390",  # noqa
+            "juli 2023": "https://gathering.tweakers.net/forum/list_message/76101516#76101516",  # noqa
+            "augustus 2023": "https://gathering.tweakers.net/forum/list_message/76397426#76397426",  # noqa
+            "september 2023": "https://gathering.tweakers.net/forum/list_message/76722044#76722044",  # noqa
+            "oktober 2023": "https://gathering.tweakers.net/forum/list_message/77060150#77060150",  # noqa
+            "november 2023": "https://gathering.tweakers.net/forum/list_message/77380106#77380106",  # noqa
+            "december 2023": "https://gathering.tweakers.net/forum/list_message/77691524#77691524",  # noqa
         }
 
         # jaren
@@ -798,7 +804,7 @@ def main():
         print(f"{prwd:4.1f} % achterwielaandrijving ({rwd} maal)")
         print(f"{ppanoramadak:4.1f} % panoramadak ({panoramadak} maal)")
         print(
-            f"{psolardak:4.1f} % zonnepanelendak (alleen op PROJECT45, {solardak} maal)\n"  # noqa
+            f"{psolardak:4.1f} % zonnepanelendak (in principe alleen op PROJECT45 geleverd in Nederland, {solardak} maal)\n"  # noqa
         )
 
         print(f"{plounge:4.1f} % Lounge ({lounge} maal)")
