@@ -668,7 +668,7 @@ def get_variant(
         print(f"#opNaam  : {op_naam:d}")
         print(f"#date    : {date}")
 
-    if int(date) < 20210401 or int(date) > 20250101:
+    if int(date) < 20210401 or int(date) > 20280101:
         my_die(f"Unexpected date: {date} for {kenteken} {fulltype}\n")
 
     kleur = "GRIJS"
@@ -698,7 +698,8 @@ def get_variant(
     elif variant == "F5E24":  # error??
         value = "58 kWh"
     else:
-        my_die(f"ERROR: variant {variant} fout voor {kenteken}: {fulltype}")
+        print(f"WARNING: variant {variant} fout voor {kenteken}: {fulltype}")
+        value = "84 kWh"
 
     if uitvoering != "E11A11" and uitvoering != "E11B11":
         my_die(f"ERROR: uitvoering {uitvoering} fout voor {kenteken}: {fulltype}")
@@ -713,8 +714,8 @@ def get_variant(
         and typegoedkeuring != "e9*2018/858*11054*03"
         and typegoedkeuring != "e9*2018/858*11054*04"
     ):
-        my_die(
-            f"ERROR: typegoedkeuring {typegoedkeuring} fout voor {kenteken}: {fulltype}"
+        print(
+            f"WARNING: typegoedkeuring {typegoedkeuring} fout voor {kenteken}: {fulltype}"
         )
 
     model2023 = typegoedkeuring == "e9*2018/858*11054*04"
@@ -723,19 +724,27 @@ def get_variant(
     prijsstr, tempkleur = prijskleur.split()
     prijs = int(prijsstr)
     kleur = tempkleur
-    if kleur not in ["WIT", "GRIJS", "GROEN", "ZWART", "BLAUW", "GEEL", "BRUIN"]:
+    if kleur not in [
+        "WIT",
+        "GRIJS",
+        "GROEN",
+        "ZWART",
+        "BLAUW",
+        "GEEL",
+        "BRUIN",
+        "ROOD",
+    ]:
         my_die(f"ERROR: kleur {kleur} fout voor {kenteken}: {fulltype}")
 
     if (prijs < 4200 or prijs > 75000) and prijs not in [
         42000,
-        72300,
         33589,
         37831,
         5242655,
         78650,
         76580,
     ]:
-        my_die(f"ERROR: prijs {prijs} fout voor {kenteken}: {fulltype}")
+        print(f"WARNING: prijs {prijs} fout voor {kenteken}: {fulltype}")
     if debug:
         print(f"#prijs   : {prijs}")
     # round prijs to multiple of 5 euro
@@ -777,6 +786,8 @@ def get_variant(
         elif kleur == "GROEN":
             prijs2 -= 895
         elif kleur == "BRUIN":
+            prijs2 = 0
+        elif kleur == "ROOD":
             prijs2 = 0
         else:
             my_die(f"PROGRAMERROR: kleur {kleur} fout voor {kenteken}: {fulltype}")
@@ -964,6 +975,8 @@ def get_variant(
             colormicapearl += 1
     elif kleur == "BRUIN":
         colormica += 1
+    elif kleur == "ROOD":
+        colorsolid += 1
     else:
         my_die(f"PROGRAMERROR: kleur {kleur} fout voor {kenteken}: {fulltype}")
 

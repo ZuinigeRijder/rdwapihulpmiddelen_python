@@ -1,4 +1,5 @@
 """rdw.py"""
+
 import datetime
 import filecmp
 import json
@@ -303,14 +304,23 @@ def main():
         kleur = safe_get_key(hash_, "eerste_kleur")
         if kleur == "":
             my_die(f"{k} Kleur leeg: [{kleur}]")
-        if kleur not in ["GROEN", "WIT", "ZWART", "GEEL", "GRIJS", "BLAUW", "BRUIN"]:
+        if kleur not in [
+            "GROEN",
+            "WIT",
+            "ZWART",
+            "GEEL",
+            "GRIJS",
+            "BLAUW",
+            "BRUIN",
+            "ROOD",
+        ]:
             my_die(f"{k} Kleur onbekend: [{kleur}]")
         kleur = kleur.ljust(10)
 
         prijs = safe_get_key(hash_, "catalogusprijs")
         if not prijs and kenteken != "R296FL":
             my_die(f"{k} Prijs leeg: [{prijs}]")
-        if len(prijs) != 5 and kenteken not in ["N770TS", "R296FL", "R303XF"]:
+        if len(prijs) > 7 and kenteken not in ["N770TS", "R296FL", "R303XF"]:
             my_die(f"{k} Prijs verkeerd: [{prijs}]")
 
         variant = safe_get_key(hash_, "variant")
@@ -362,7 +372,7 @@ def main():
             "F5E62",
             "F5E24",
         ]:
-            my_die(f"{k} Variant verkeerd: [{variant}] {hash_}")
+            print(f"WARNING: {k} Variant verkeerd: [{variant}] {hash_}")
 
         if uitvoering == "":
             my_die(f"{k} Uitvoering leeg: [{uitvoering}] {hash_}")
@@ -376,7 +386,7 @@ def main():
             "e9*2018/858*11054*03",
             "e9*2018/858*11054*04",
         ]:
-            my_die(f"{k} Typegoedkeuring verkeerd: [{typegoedkeuring}] {hash_}")
+            print(f"WARNING: {k} Typegoedkeuring verkeerd: [{typegoedkeuring}] {hash_}")
 
         cartype = f"{variant};{uitvoering};{typegoedkeuring}; prijs: {prijs} {kleur}"
         date20 = date_toelating.replace(
@@ -755,6 +765,8 @@ def main():
             "oktober 2023": "https://gathering.tweakers.net/forum/list_message/77060150#77060150",  # noqa
             "november 2023": "https://gathering.tweakers.net/forum/list_message/77380106#77380106",  # noqa
             "december 2023": "https://gathering.tweakers.net/forum/list_message/77691524#77691524",  # noqa
+            "januari 2024": "https://gathering.tweakers.net/forum/list_message/78011736#78011736",  # noqa
+            "februari 2024": "https://gathering.tweakers.net/forum/list_message/78319598#783195980",  # noqa
         }
 
         # jaren
@@ -874,9 +886,11 @@ def main():
             variantscount.items(),
             key=lambda x: (
                 x[1],
-                format(-int(x[0].split(" ")[0]), "05d")
-                if x[0].split(" ")[0].isdigit()
-                else x[0],
+                (
+                    format(-int(x[0].split(" ")[0]), "05d")
+                    if x[0].split(" ")[0].isdigit()
+                    else x[0]
+                ),
             ),
             reverse=True,
         ):
