@@ -1,4 +1,5 @@
 """rdw_utils.py"""
+
 # pylint:disable=too-many-lines
 from datetime import datetime
 import re
@@ -715,7 +716,7 @@ def get_variant(
         and typegoedkeuring != "e9*2018/858*11054*04"
     ):
         print(
-            f"WARNING: typegoedkeuring {typegoedkeuring} fout voor {kenteken}: {fulltype}"
+            f"WARNING: typegoedkeuring {typegoedkeuring} fout voor {kenteken}: {fulltype}"  # noqa
         )
 
     model2023 = typegoedkeuring == "e9*2018/858*11054*04"

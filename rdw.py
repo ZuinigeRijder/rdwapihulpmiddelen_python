@@ -852,6 +852,7 @@ def main():
             "BLAUW": "Lucid Blue (Mica Parelmoer)",
             "GEEL": "Gravity Gold (Mat)",
             "BRUIN": "Mystic Olive (Mica)",
+            "ROOD": "Ultimate Red Metallic",
         }
 
         colorsoutput = []
