@@ -4,6 +4,7 @@
 
 # rdwapihulpmiddelen python versie
 Python RDW API hulpmiddelen voor de IONIQ 5, misschien dat het ook gebruikt kan worden ter inspiratie voor andere auto's. Maar kan natuurlijk ook gebruikt worden om nieuwe kentekens te vinden die nog niet op naam staan.
+Zie het tweakers ["Het Hyundai Ioniq 5 leveringen topic"](https://gathering.tweakers.net/forum/list_messages/2073194/last) waar de scripts vroeger gebruikt werden.
 
 Voor de perl versie, [zie hier](https://github.com/ZuinigeRijder/rdwapihulpmiddelen). Echter dat is niet aangepast aan het feit dat RDW sinds 12 april 2023 ook kentekens nog niet op naam teruggeeft.
 
