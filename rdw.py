@@ -61,7 +61,7 @@ def get_print_line(line):
     """get_print_line"""
     _ = D and dbg(f"getPrintLine({line})")
     new = line[3:19] + line[39:93] + line[97:]
-    new = re.sub(r";e9\*2018\/858\*11054\*0[134];", "", new)
+    new = re.sub(r";e9\*2018\/858\*11054\*0[13456789];", "", new)
 
     new = new.replace("prijs: ", "E")
 
@@ -73,8 +73,10 @@ def get_print_line(line):
     # BRUIN Mystic Olive (Mica)
     # GRIJS Shooting Star (Mat), Cyber Grey (Metal.), Galactic Gray (Metal.)
     # WIT   Atlas White (Solid) Atlas White Matte
+    # ROOD  Ultimate Red Metallic
     new = new.replace("GEEL  ", "Gravity Gold   ")
     new = new.replace("ZWART ", "Phantom Black  ")
+    new = new.replace("ROOD ", "Red Metallic  ")
     if "GROEN " in new and " (Olive)" in new:
         new = new.replace(" (Olive)", "")
         new = new.replace("GROEN ", "Mystic Olive   ")
@@ -94,6 +96,7 @@ def get_print_line(line):
 
     # get rid of internal information too, not interesting for end user
     new = re.sub(r"F5E..;E11.11 ", "", new)
+    new = re.sub(r"A5E..;E11.11 ", "", new)
     _ = D and dbg(f"getPrintLine RESULT: [{new}]")
 
     return new
@@ -104,6 +107,9 @@ def main():
 
     # this contains the pricelist per date and kWh battery and AWD
     pricelists_dates = [
+        "20250101",
+        "20240701",
+        "20231001",
         "20230501",
         "20230101",
         "20220901",
@@ -150,6 +156,8 @@ def main():
     connectplus = 0
     connect = 0
     style = 0
+    nline = 0
+    nlineedition = 0
 
     model2022 = 0
     model2022_5 = 0
@@ -364,15 +372,19 @@ def main():
         if variant == "":
             my_die(f"{k} Variant leeg: [{variant}] {hash_}")
         if variant not in [
+            "F5E24",
             "F5E14",
             "F5E32",
-            "F5P41",
             "F5E42",
             "F5E54",
             "F5E62",
-            "F5E24",
+            "F5E22",
+            "F5E12",
+            "A5E22",
+            "F5E34",
+            "F5E74",
         ]:
-            print(f"WARNING: {k} Variant verkeerd: [{variant}] {hash_}")
+            my_die(f"WARNING: {k} Variant verkeerd: [{variant}] {hash_}")
 
         if uitvoering == "":
             my_die(f"{k} Uitvoering leeg: [{uitvoering}] {hash_}")
@@ -385,8 +397,13 @@ def main():
             "e9*2018/858*11054*01",
             "e9*2018/858*11054*03",
             "e9*2018/858*11054*04",
+            "e9*2018/858*11054*05",
+            "e9*2018/858*11054*06",
+            "e9*2018/858*11054*07",
+            "e9*2018/858*11054*08",
+            "e9*2018/858*11054*09",
         ]:
-            print(f"WARNING: {k} Typegoedkeuring verkeerd: [{typegoedkeuring}] {hash_}")
+            my_die(f"ERROR: {k} Typegoedkeuring verkeerd: [{typegoedkeuring}] {hash_}")
 
         cartype = f"{variant};{uitvoering};{typegoedkeuring}; prijs: {prijs} {kleur}"
         date20 = date_toelating.replace(
@@ -546,7 +563,9 @@ def main():
             model2022_5 += 1
         else:
             model2022 += 1
-        if not re.search(r"58 kWh", print_line, re.IGNORECASE):
+        if not re.search(r"58 kWh", print_line, re.IGNORECASE) and not re.search(
+            r"63 kWh", print_line, re.IGNORECASE
+        ):
             longrangebattery += 1
         if re.search(r"V2L|PROJECT45|Lounge|Connect", print_line, re.IGNORECASE):
             v2l += 1
@@ -569,8 +588,12 @@ def main():
             connect += 1
         elif re.search(r"STYLE", print_line, re.IGNORECASE):
             style += 1
+        elif re.search(r"N LINE EDITION", print_line, re.IGNORECASE):
+            nlineedition += 1
+        elif re.search(r"N LINE", print_line, re.IGNORECASE):
+            nline += 1
         else:
-            print(f"ERROR: Model niet gevonden: [{print_line}]")
+            my_die(f"ERROR: Model niet gevonden: [{k}][{print_line}]")
 
         if "(nog niet op naam)" not in print_line:
             date = k[10:16]
@@ -809,6 +832,8 @@ def main():
         pconnectplus = connectplus / count * 100
         pconnect = connect / count * 100
         pstyle = style / count * 100
+        pnline = nline / count * 100
+        pnlineedition = nlineedition / count * 100
 
         print(f"{pwp:4.1f} % warmtepomp (standaard vanaf Connect+, {warmtepomp} maal)")
         print(f"{plongrangebattery:4.1f} % grote batterij ({longrangebattery} maal)")
@@ -819,6 +844,8 @@ def main():
             f"{psolardak:4.1f} % zonnepanelendak (in principe alleen op PROJECT45 geleverd in Nederland, {solardak} maal)\n"  # noqa
         )
 
+        print(f"{pnline:4.1f} % N Line ({nline} maal)")
+        print(f"{pnlineedition:4.1f} % N Line Edition ({nlineedition} maal)")
         print(f"{plounge:4.1f} % Lounge ({lounge} maal)")
         print(f"{pstyle:4.1f} % Style ({style} maal)")
         print(f"{pconnectplus:4.1f} % Connect+ ({connectplus} maal)")
@@ -852,7 +879,7 @@ def main():
             "BLAUW": "Lucid Blue (Mica Parelmoer)",
             "GEEL": "Gravity Gold (Mat)",
             "BRUIN": "Mystic Olive (Mica)",
-            "ROOD": "Ultimate Red Metallic",
+            "ROOD": "Red Metallic",
         }
 
         colorsoutput = []

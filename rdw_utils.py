@@ -276,6 +276,106 @@ def fill_price(
                     + " met Zonnepanelendak en digitale buitenspiegels zonder FCA-JX/HDA2"  # noqa
                     + prijslijst
                 )
+    elif variant == "N Line":
+        prices[prijscheck + 895] = (
+            batterijgrootte + variant + " met Panoramadak" + prijslijst
+        )
+        prices[prijscheck + 1200] = (
+            batterijgrootte + variant + " met Zonnepanelendak" + prijslijst
+        )
+
+        if duurder1500:
+            prices[prijscheck + 895 + 1500] = (
+                batterijgrootte
+                + variant
+                + " met Panoramadak"
+                + prijslijst
+                + " (1500 euro duurder)"
+            )
+            prices[prijscheck + 1200 + 1500] = (
+                batterijgrootte
+                + variant
+                + " met Zonnepanelendak"
+                + prijslijst
+                + " (1500 euro duurder)"
+            )
+
+        if zonder_fca_hda2:
+            prices[prijscheck - 750] = (
+                batterijgrootte + variant + " zonder FCA-JX/HDA2" + prijslijst
+            )
+            prices[prijscheck + 895 - 750] = (
+                batterijgrootte
+                + variant
+                + " met Panoramadak zonder FCA-JX/HDA2"
+                + prijslijst
+            )
+            prices[prijscheck + 1200 - 750] = (
+                batterijgrootte
+                + variant
+                + " met Zonnepanelendak zonder FCA-JX/HDA2"
+                + prijslijst
+            )
+
+            if duurder1500:
+                prices[prijscheck - 750 + 1500] = (
+                    batterijgrootte
+                    + variant
+                    + " zonder FCA-JX/HDA2"
+                    + prijslijst
+                    + " (1500 euro duurder)"
+                )
+                prices[prijscheck + 895 - 750 + 1500] = (
+                    batterijgrootte
+                    + variant
+                    + " met Panoramadak zonder FCA-JX/HDA2"
+                    + prijslijst
+                    + " (1500 euro duurder)"
+                )
+                prices[prijscheck + 1200 - 750 + 1500] = (
+                    batterijgrootte
+                    + variant
+                    + " met Zonnepanelendak zonder FCA-JX/HDA2"
+                    + prijslijst
+                    + " (1500 euro duurder)"
+                )
+
+        if model2023:
+            prices[prijscheck + 1400] = (
+                batterijgrootte + variant + " met digitale buitenspiegels" + prijslijst
+            )
+            prices[prijscheck + 895 + 1400] = (
+                batterijgrootte
+                + variant
+                + " met Panoramadak en digitale buitenspiegels"
+                + prijslijst
+            )
+            prices[prijscheck + 1200 + 1400] = (
+                batterijgrootte
+                + variant
+                + " met Zonnepanelendak en digitale buitenspiegels"
+                + prijslijst
+            )
+
+            if zonder_fca_hda2:
+                prices[prijscheck + 1400 - 750] = (
+                    batterijgrootte
+                    + variant
+                    + " met digitale buitenspiegels zonder FCA-JX/HDA2"
+                    + prijslijst
+                )
+                prices[prijscheck + 895 + 1400 - 750] = (
+                    batterijgrootte
+                    + variant
+                    + " met Panoramadak en digitale buitenspiegels zonder FCA-JX/HDA2"
+                    + prijslijst
+                )
+                prices[prijscheck + 1200 + 1400 - 750] = (
+                    batterijgrootte
+                    + variant
+                    + " met Zonnepanelendak en digitale buitenspiegels zonder FCA-JX/HDA2"  # noqa
+                    + prijslijst
+                )
     elif variant == "Connect":
         prices[prijscheck + 1200] = batterijgrootte + variant + " met WP" + prijslijst
 
@@ -312,6 +412,19 @@ def fill_price(
                     + " (1500 euro duurder)"
                 )
     elif variant == "Connect+":
+        if zonder_fca_hda2:
+            prices[prijscheck - 750] = (
+                batterijgrootte + variant + " zonder FCA-JX/HDA2" + prijslijst
+            )
+            if duurder1500:
+                prices[prijscheck - 750 + 1500] = (
+                    batterijgrootte
+                    + variant
+                    + " zonder FCA-JX/HDA2"
+                    + prijslijst
+                    + " (1500 euro duurder)"
+                )
+    elif variant == "N Line Edition":
         if zonder_fca_hda2:
             prices[prijscheck - 750] = (
                 batterijgrootte + variant + " zonder FCA-JX/HDA2" + prijslijst
@@ -364,8 +477,32 @@ def find_variant_exact(
     pricelists, pricelists_dates, debug, kenteken, prijs, variant, model2023, date
 ):
     """findVariantExact"""
-    awd = variant == "F5E14" or variant == "F5E54"
-    smallbattery = variant == "F5E42"
+    postfix = ""
+    if variant in ("F5E42", "F5E12"):
+        postfix += "small"
+    else:
+        postfix += "large"
+    if variant in ("F5E14", "F5E54", "F5E74"):
+        postfix += "AWD"
+    if model2023:
+        postfix += "_2023"
+
+    if variant not in (
+        "F5E14",
+        "73AWD",
+        "F5E32",
+        "F5E42",
+        "F5E54",
+        "F5E62",
+        "F5E24",
+        "F5E22",
+        "F5E12",
+        "A5E22",
+        "F5E34",
+        "F5E74",
+    ):
+        my_die(f"ERROR: variant {variant} fout voor {kenteken}")
+
     result = ""
     checked_one_pricelist = False
     for pricelist_date in pricelists_dates:
@@ -377,39 +514,21 @@ def find_variant_exact(
             continue  # skip registration dates before prijslist date
 
         checked_one_pricelist = True
+        pricelist = f"{pricelist_date}_{postfix}"
         if debug:
-            print(f"Checking {kenteken} pricelist [{pricelist_date}] for [{date}]")
+            print(
+                f"find_variant_exact: Checking {kenteken} pricelist [{pricelist}] for [{date}]"  # noqa
+            )
 
-        if smallbattery:
-            if model2023:
-                result = get_prijs(pricelists, f"{pricelist_date}_58_2023", prijs)
-            else:
-                result = get_prijs(pricelists, f"{pricelist_date}_58", prijs)
-        elif awd:
-            if model2023:
-                result = get_prijs(pricelists, f"{pricelist_date}_77AWD", prijs)
-            else:
-                result = get_prijs(pricelists, f"{pricelist_date}_73AWD", prijs)
-        else:
-            if model2023:
-                result = get_prijs(pricelists, f"{pricelist_date}_77", prijs)
-            else:
-                result = get_prijs(pricelists, f"{pricelist_date}_73", prijs)
-
+        result = get_prijs(pricelists, f"{pricelist}", prijs)
         if result != "":
             if debug:
                 print(f"{kenteken} find_variant_exact found result {result}")
             break  # found result....
 
     if debug:
-        small_str = ""
-        if smallbattery:
-            small_str = "1"
-        awd_str = ""
-        if awd:
-            awd_str = "1"
         print(
-            f"findVariantExact {kenteken} result {prijs}, {awd_str}, {small_str}: [{result}]"  # noqa
+            f"findVariantExact {kenteken} result {prijs}, variant={variant}, model2023={model2023}, date={date}, postfix={postfix}: [{result}]"  # noqa
         )
 
     return result
@@ -454,8 +573,32 @@ def find_variant_nearest(
     pricelists, pricelists_dates, debug, kenteken, prijs, variant, model2023, date
 ):
     """find_variant_nearest"""
-    awd = variant in ("F5E14", "F5E54")
-    smallbattery = variant == "F5E42"
+    postfix = ""
+    if variant in ("F5E42", "F5E12"):
+        postfix += "small"
+    else:
+        postfix += "large"
+    if variant in ("F5E14", "F5E54", "F5E74"):
+        postfix += "AWD"
+    if model2023:
+        postfix += "_2023"
+
+    if variant not in (
+        "F5E14",
+        "73AWD",
+        "F5E32",
+        "F5E42",
+        "F5E54",
+        "F5E62",
+        "F5E24",
+        "F5E22",
+        "F5E12",
+        "A5E22",
+        "F5E34",
+        "F5E74",
+    ):
+        my_die(f"ERROR: variant {variant} fout voor {kenteken}")
+
     result = ""
     checked_one_pricelist = False
     for pricelist_date in pricelists_dates:
@@ -469,62 +612,24 @@ def find_variant_nearest(
             continue  # skip registration dates before pricelist date
 
         checked_one_pricelist = True
+        pricelist = f"{pricelist_date}_{postfix}"
         if debug:
             print(
-                f"Checking nearest pricelist {kenteken} pricelist {pricelist_date} for {date}"  # noqa
+                f"find_variant_nearest: Checking nearest pricelist {kenteken} pricelist {pricelist} for {date}"  # noqa
             )
-        if smallbattery:
-            if model2023:
-                result = find_helper(
-                    debug,
-                    safe_get_pricelists_key(pricelists, pricelist_date + "_58_2023"),
-                    prijs,
-                )
-            else:
-                result = find_helper(
-                    debug,
-                    safe_get_pricelists_key(pricelists, pricelist_date + "_58"),
-                    prijs,
-                )
-        elif awd:
-            if model2023:
-                result = find_helper(
-                    debug,
-                    safe_get_pricelists_key(pricelists, pricelist_date + "_77AWD"),
-                    prijs,
-                )
-            else:
-                result = find_helper(
-                    debug,
-                    safe_get_pricelists_key(pricelists, pricelist_date + "_73AWD"),
-                    prijs,
-                )
-        else:
-            if model2023:
-                result = find_helper(
-                    debug,
-                    safe_get_pricelists_key(pricelists, pricelist_date + "_77"),
-                    prijs,
-                )
-            else:
-                result = find_helper(
-                    debug,
-                    safe_get_pricelists_key(pricelists, pricelist_date + "_73"),
-                    prijs,
-                )
+
+        result = find_helper(
+            debug,
+            safe_get_pricelists_key(pricelists, f"{pricelist}"),
+            prijs,
+        )
         if result != "":
             if debug:
                 print(f"{kenteken} find_variant_nearest found result {result}")
             break
     if debug:
-        small_str = ""
-        if smallbattery:
-            small_str = "1"
-        awd_str = ""
-        if awd:
-            awd_str = "1"
         print(
-            f"findVariantNearest {kenteken} result {prijs}, {awd_str}, {small_str}: [{result}]"  # noqa
+            f"findVariantNearest {kenteken} result {prijs}, variant={variant}, model2023={model2023}, date={date}, postfix={postfix}: [{result}]"  # noqa
         )
     return result
 
@@ -600,11 +705,17 @@ def clean_variant(value, debug):
 # e9*2018/858*11054*04 since 20220708 (model 2023)
 #
 # Variant:
+# F5E24=58 kWh RWD (model 2021)
 # F5E14=72 kWh AWD (model 2022)
 # F5E32=72 kWh RWD (model 2022)
 # F5E42=58 kWh RWD (model 2022/2023)
 # F5E54=77 kWh AWD (model 2023)
 # F5E62=77 kWh RWD (model 2023)
+# F5E22=73 kWh RWD
+# F5E12 63 kWh RWD
+# A5E22=84 kWh RWD
+# F5E34=84 kWh RWD
+# F5E74=84 kWh AWD
 #
 # Uitvoering:
 # E11A11=19 inch
@@ -686,40 +797,63 @@ def get_variant(
     if not prijskleur.startswith("prijs: "):
         my_die(f"Geen prijs in fulltype: {fulltype}")
 
-    if variant == "F5E14":
+    if variant == "F5E14":  # 2021/2022
         value = "73 kWh AWD"
-    elif variant == "F5E32":
+    elif variant == "F5E32":  # 2021/2022
         value = "73 kWh"
-    elif variant == "F5E42":
+    elif variant == "F5E42":  # 2021/2022
         value = "58 kWh"
-    elif variant == "F5E54":
+    elif variant == "F5E54":  # 2022/2024
+        value = "77 kWh AWD"
+    elif variant == "F5E62":  # 2022/2023
         value = "77 kWh"
-    elif variant == "F5E62":
-        value = "77 kWh"
-    elif variant == "F5E24":  # error??
+    elif variant == "F5E24":  #
         value = "58 kWh"
-    else:
-        print(f"WARNING: variant {variant} fout voor {kenteken}: {fulltype}")
+    elif variant == "F5E22":  # 2021/2024
+        value = "73 kWh"
+    elif variant == "F5E12":  # 2021
+        value = "63 kWh"
+    elif variant == "A5E22":  # error??
         value = "84 kWh"
+    elif variant == "F5E34":  # error??
+        value = "84 kWh"
+    elif variant == "F5E74":  # error??
+        value = "84 kWh AWD"
+    else:
+        my_die(f"ERROR: variant {variant} fout voor {kenteken}: {fulltype}")
 
     if uitvoering != "E11A11" and uitvoering != "E11B11":
         my_die(f"ERROR: uitvoering {uitvoering} fout voor {kenteken}: {fulltype}")
 
     inch20 = uitvoering == "E11B11"
 
-    if inch20 and variant == "F5E42":
+    if inch20 and variant in ("F5E42", "F5E24", "F5E12"):
         my_die("58 kWh and 20 inch not possible")
 
-    if (
-        typegoedkeuring != "e9*2018/858*11054*01"
-        and typegoedkeuring != "e9*2018/858*11054*03"
-        and typegoedkeuring != "e9*2018/858*11054*04"
-    ):
+    if typegoedkeuring not in [
+        "e9*2018/858*11054*01",
+        "e9*2018/858*11054*03",
+        "e9*2018/858*11054*04",
+        "e9*2018/858*11054*05",
+        "e9*2018/858*11054*06",
+        "e9*2018/858*11054*07",
+        "e9*2018/858*11054*08",
+        "e9*2018/858*11054*09",
+    ]:
         print(
             f"WARNING: typegoedkeuring {typegoedkeuring} fout voor {kenteken}: {fulltype}"  # noqa
         )
 
-    model2023 = typegoedkeuring == "e9*2018/858*11054*04"
+    model2023 = (
+        typegoedkeuring == "e9*2018/858*11054*04"
+        and variant
+        in (
+            "F5E42",
+            "F5E24",
+        )
+        and date >= "20220301"
+        and date < "20240701"
+    )
 
     prijskleur = prijskleur.replace("prijs: ", "")
     prijsstr, tempkleur = prijskleur.split()
@@ -914,9 +1048,11 @@ def get_variant(
 
         if found_variant == "":
             found_variant = found_variant2
+        if found_variant == "":
+            my_die(
+                f"No variant found for: {kenteken}: {fulltype} {value} -> [{found_variant}],[{found_variant2}]"  # noqa
+            )
         value = found_variant
-        if debug:
-            print(f"#value={value}")
 
     if inch20:
         if "Lounge" not in value and "PROJECT45" not in value:
@@ -992,7 +1128,7 @@ def get_variant(
         else:
             variantscountnognietopnaam[stripped] = 1
     if debug:
-        print(f"#RETURN: [{value}]")
+        print(f"#RETURN: [{kenteken}] [{value}]")
 
     return_value = (
         value,
@@ -1038,9 +1174,9 @@ def fill_prices(d):  # pylint:disable=invalid-name
     fill_price(d, p_mei2021_awd, "Connect+", 56505, 73, True, False, par)
     fill_price(d, p_mei2021_awd, "Lounge", 58705, 73, True, False, par)
 
-    pricelists["20210501_58"] = p_mei2021_small
-    pricelists["20210501_73"] = p_mei2021_big
-    pricelists["20210501_73AWD"] = p_mei2021_awd
+    pricelists["20210501_small"] = p_mei2021_small
+    pricelists["20210501_large"] = p_mei2021_big
+    pricelists["20210501_largeAWD"] = p_mei2021_awd
 
     # model 2022 prijslijst maart 2022:
     p_mrt22_small = {}
@@ -1082,9 +1218,9 @@ def fill_prices(d):  # pylint:disable=invalid-name
     fill_price(d, p_mrt22_awd, "Connect+", 57505 - 1000, 73, True, False, e1000)
     fill_price(d, p_mrt22_awd, "Lounge", 59905 - 1200, 73, True, False, e1200)
 
-    pricelists["20220301_58"] = p_mrt22_small
-    pricelists["20220301_73"] = p_mrt22_big
-    pricelists["20220301_73AWD"] = p_mrt22_awd
+    pricelists["20220301_small"] = p_mrt22_small
+    pricelists["20220301_large"] = p_mrt22_big
+    pricelists["20220301_largeAWD"] = p_mrt22_awd
 
     # model 2022 prijslijst mei 2022: 1500 euro duurder dan jan 2022
     p_mei22_small = {}
@@ -1126,9 +1262,9 @@ def fill_prices(d):  # pylint:disable=invalid-name
     fill_price(d, p_mei22_awd, "Connect+", 59005 - 1000, 73, True, False, e1000)
     fill_price(d, p_mei22_awd, "Lounge", 61405 - 1200, 73, True, False, e1200)
 
-    pricelists["20220501_58"] = p_mei22_small
-    pricelists["20220501_73"] = p_mei22_big
-    pricelists["20220501_73AWD"] = p_mei22_awd
+    pricelists["20220501_small"] = p_mei22_small
+    pricelists["20220501_large"] = p_mei22_big
+    pricelists["20220501_largeAWD"] = p_mei22_awd
 
     # model 2022 prijslijst september: 1495 euro duurder dan mei 2022
     p_sep22_small = {}
@@ -1170,9 +1306,9 @@ def fill_prices(d):  # pylint:disable=invalid-name
     fill_price(d, p_sep22_awd, "Connect+", 60500 - 1000, 73, True, False, e1000)
     fill_price(d, p_sep22_awd, "Lounge", 62900 - 1200, 73, True, False, e1200)
 
-    pricelists["20220901_58"] = p_sep22_small
-    pricelists["20220901_73"] = p_sep22_big
-    pricelists["20220901_73AWD"] = p_sep22_awd
+    pricelists["20220901_small"] = p_sep22_small
+    pricelists["20220901_large"] = p_sep22_big
+    pricelists["20220901_largeAWD"] = p_sep22_awd
 
     # model 2022.5 prijslijst januari 2023: 1400 euro duurder dan september 2022
     p_jan23_small = {}
@@ -1214,9 +1350,9 @@ def fill_prices(d):  # pylint:disable=invalid-name
     fill_price(d, p_jan23_awd, "Connect+", 61900 - 1200, 73, True, False, e1200)
     fill_price(d, p_jan23_awd, "Lounge", 64300 - 1200, 73, True, False, e1200)
 
-    pricelists["20230101_58"] = p_jan23_small
-    pricelists["20230101_73"] = p_jan23_big
-    pricelists["20230101_73AWD"] = p_jan23_awd
+    pricelists["20230101_small"] = p_jan23_small
+    pricelists["20230101_large"] = p_jan23_big
+    pricelists["20230101_largeAWD"] = p_jan23_awd
 
     # model 2022.5 prijslijst mei 2023: 1000 euro duurder dan januari 2023
     p_mei23_small = {}
@@ -1258,9 +1394,9 @@ def fill_prices(d):  # pylint:disable=invalid-name
     fill_price(d, p_mei23_awd, "Connect+", 62900 - 1200, 73, True, False, e1200)
     fill_price(d, p_mei23_awd, "Lounge", 65300 - 1200, 73, True, False, e1200)
 
-    pricelists["20230501_58"] = p_mei23_small
-    pricelists["20230501_73"] = p_mei23_big
-    pricelists["20230501_73AWD"] = p_mei23_awd
+    pricelists["20230501_small"] = p_mei23_small
+    pricelists["20230501_large"] = p_mei23_big
+    pricelists["20230501_largeAWD"] = p_mei23_awd
 
     # ========== model2023 ============================================================
     # model 2023 prijslijst maart 2022
@@ -1282,9 +1418,9 @@ def fill_prices(d):  # pylint:disable=invalid-name
     fill_price(d, p_mrt22_awd_23, "Connect+", 59005, 77, True, True, par)
     fill_price(d, p_mrt22_awd_23, "Lounge", 61405, 77, True, True, par)
 
-    pricelists["20220301_58_2023"] = p_mrt22_small_23
-    pricelists["20220301_77"] = p_mrt22_big_23
-    pricelists["20220301_77AWD"] = p_mrt22_awd_23
+    pricelists["20220301_small_2023"] = p_mrt22_small_23
+    pricelists["20220301_large"] = p_mrt22_big_23
+    pricelists["20220301_largeAWD"] = p_mrt22_awd_23
 
     # model 2023 prijslijst mei 2022
     p_mei22_small_23 = {}
@@ -1305,9 +1441,9 @@ def fill_prices(d):  # pylint:disable=invalid-name
     fill_price(d, p_mei22_awd_23, "Connect+", 59005, 77, True, True, par)
     fill_price(d, p_mei22_awd_23, "Lounge", 61405, 77, True, True, par)
 
-    pricelists["20220501_58_2023"] = p_mei22_small_23
-    pricelists["20220501_77"] = p_mei22_big_23
-    pricelists["20220501_77AWD"] = p_mei22_awd_23
+    pricelists["20220501_small_2023"] = p_mei22_small_23
+    pricelists["20220501_large"] = p_mei22_big_23
+    pricelists["20220501_largeAWD"] = p_mei22_awd_23
 
     # model 2023 prijslijst september: 1495 euro duurder dan mei 2022
     p_sep22_small_23 = {}
@@ -1328,9 +1464,9 @@ def fill_prices(d):  # pylint:disable=invalid-name
     fill_price(d, p_sep22_awd_23, "Connect+", 60500, 77, True, True, par)
     fill_price(d, p_sep22_awd_23, "Lounge", 62900, 77, True, True, par)
 
-    pricelists["20220901_58_2023"] = p_sep22_small_23
-    pricelists["20220901_77"] = p_sep22_big_23
-    pricelists["20220901_77AWD"] = p_sep22_awd_23
+    pricelists["20220901_small_2023"] = p_sep22_small_23
+    pricelists["20220901_large"] = p_sep22_big_23
+    pricelists["20220901_largeAWD"] = p_sep22_awd_23
 
     # model 2023 prijslijst januari 2023: 1400 euro duurder dan september 2022
     p_jan23_small_23 = {}
@@ -1351,9 +1487,9 @@ def fill_prices(d):  # pylint:disable=invalid-name
     fill_price(d, p_jan23_awd_23, "Connect+", 61900, 77, True, True, par)
     fill_price(d, p_jan23_awd_23, "Lounge", 64300, 77, True, True, par)
 
-    pricelists["20230101_58_2023"] = p_jan23_small_23
-    pricelists["20230101_77"] = p_jan23_big_23
-    pricelists["20230101_77AWD"] = p_jan23_awd_23
+    pricelists["20230101_small_2023"] = p_jan23_small_23
+    pricelists["20230101_large"] = p_jan23_big_23
+    pricelists["20230101_largeAWD"] = p_jan23_awd_23
 
     # model 2023 prijslijst mei 2023: 1000 euro duurder dan januari 2023
     p_mei23_small_23 = {}
@@ -1374,8 +1510,78 @@ def fill_prices(d):  # pylint:disable=invalid-name
     fill_price(d, p_mei23_awd_23, "Connect+", 62900, 77, True, True, par)
     fill_price(d, p_mei23_awd_23, "Lounge", 65300, 77, True, True, par)
 
-    pricelists["20230501_58_2023"] = p_mei23_small_23
-    pricelists["20230501_77"] = p_mei23_big_23
-    pricelists["20230501_77AWD"] = p_mei23_awd_23
+    pricelists["20230501_small_2023"] = p_mei23_small_23
+    pricelists["20230501_large"] = p_mei23_big_23
+    pricelists["20230501_largeAWD"] = p_mei23_awd_23
 
+    # model 2023 prijslijst oktober 2023: zelfde prijs dan mei 2023
+    p_okt23_small_23 = {}
+    p_okt23_big_23 = {}
+    p_okt23_awd_23 = {}
+    par = "okt 2023"
+    fill_price(d, p_okt23_small_23, "Style", 48200, 58, False, True, par)
+    fill_price(d, p_okt23_small_23, "Connect", 52300, 58, False, True, par)
+    fill_price(d, p_okt23_small_23, "Connect+", 55300, 58, False, True, par)
+    fill_price(d, p_okt23_small_23, "Lounge", 57700, 58, False, True, par)
+
+    fill_price(d, p_okt23_big_23, "Style", 51800, 77, False, True, par)
+    fill_price(d, p_okt23_big_23, "Connect", 55900, 77, False, True, par)
+    fill_price(d, p_okt23_big_23, "Connect+", 58900, 77, False, True, par)
+    fill_price(d, p_okt23_big_23, "Lounge", 61300, 77, False, True, par)
+
+    fill_price(d, p_okt23_awd_23, "Connect", 59900, 77, True, True, par)
+    fill_price(d, p_okt23_awd_23, "Connect+", 62900, 77, True, True, par)
+    fill_price(d, p_okt23_awd_23, "Lounge", 65300, 77, True, True, par)
+
+    pricelists["20231001_small_2023"] = p_okt23_small_23
+    pricelists["20231001_large"] = p_okt23_big_23
+    pricelists["20231001_largeAWD"] = p_okt23_awd_23
+
+    # model 2024 prijslijst juli 2024
+    p_jul24_small_24 = {}
+    p_jul24_big_24 = {}
+    p_jul24_awd_24 = {}
+    par = "juli 2024"
+    fill_price(d, p_jul24_small_24, "Style", 41900, 63, False, False, par)
+    fill_price(d, p_jul24_small_24, "Connect", 46900, 63, False, False, par)
+    fill_price(d, p_jul24_small_24, "Connect+", 49900, 63, False, False, par)
+    fill_price(d, p_jul24_small_24, "Lounge", 52300, 63, False, False, par)
+
+    fill_price(d, p_jul24_big_24, "Style", 45900, 84, False, False, par)
+    fill_price(d, p_jul24_big_24, "Connect", 50900, 84, False, False, par)
+    fill_price(d, p_jul24_big_24, "Connect+", 53900, 84, False, False, par)
+    fill_price(d, p_jul24_big_24, "N Line Edition", 53900, 84, False, False, par)
+    fill_price(d, p_jul24_big_24, "Lounge", 56300, 84, False, False, par)
+    fill_price(d, p_jul24_big_24, "N Line", 56300, 84, False, False, par)
+
+    fill_price(d, p_jul24_awd_24, "Lounge", 60300, 84, True, False, par)
+    fill_price(d, p_jul24_awd_24, "N Line", 60300, 84, True, False, par)
+
+    pricelists["20240701_small"] = p_jul24_small_24
+    pricelists["20240701_large"] = p_jul24_big_24
+    pricelists["20240701_largeAWD"] = p_jul24_awd_24
+
+    # model 2025 prijslijst januari 2025
+    p_jan25_small_25 = {}
+    p_jan25_big_25 = {}
+    p_jan25_awd_25 = {}
+    par = "jan 2025"
+    fill_price(d, p_jan25_small_25, "Style", 41900, 63, False, False, par)
+    fill_price(d, p_jan25_small_25, "Connect", 46900, 63, False, False, par)
+    fill_price(d, p_jan25_small_25, "Connect+", 49900, 63, False, False, par)
+    fill_price(d, p_jan25_small_25, "Lounge", 52300, 63, False, False, par)
+
+    fill_price(d, p_jan25_big_25, "Style", 45900, 84, False, False, par)
+    fill_price(d, p_jan25_big_25, "Connect", 50900, 84, False, False, par)
+    fill_price(d, p_jan25_big_25, "Connect+", 53900, 84, False, False, par)
+    fill_price(d, p_jan25_big_25, "N Line Edition", 53900, 84, False, False, par)
+    fill_price(d, p_jan25_big_25, "Lounge", 56300, 84, False, False, par)
+    fill_price(d, p_jan25_big_25, "N Line", 56300, 84, False, False, par)
+
+    fill_price(d, p_jan25_awd_25, "Lounge", 60300, 84, True, False, par)
+    fill_price(d, p_jan25_awd_25, "N Line", 60300, 84, True, False, par)
+
+    pricelists["20250101_small"] = p_jan25_small_25
+    pricelists["20250101_large"] = p_jan25_big_25
+    pricelists["20250101_largeAWD"] = p_jan25_awd_25
     return pricelists
